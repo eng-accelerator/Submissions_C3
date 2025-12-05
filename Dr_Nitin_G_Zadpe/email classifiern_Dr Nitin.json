@@ -1,0 +1,417 @@
+{
+  "name": "email classifier",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1344,
+        112
+      ],
+      "id": "6bb27183-da0d-47d5-aa72-ba758f39b881",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=From: {{ $json.From }}\nSubject: {{ $json.Subject }}\nFull Body: {{$json.snippet}}",
+        "categories": {
+          "categories": [
+            {
+              "category": "URGENT_ACTION",
+              "description": "Requires immediate response within 24 hours, critical issues, system failures "
+            },
+            {
+              "category": "IT_INFRASTRUCTURE",
+              "description": "Server issues, network problems, system maintenance, technical support requests, infrastructure alerts"
+            },
+            {
+              "category": "ADMINISTRATIVE",
+              "description": "HR matters, finance, payroll, general administration, policy updates, internal communications"
+            },
+            {
+              "category": "NEWSLETTERS",
+              "description": "Newsletters, announcements, updates, bulk communications, informational emails"
+            },
+            {
+              "category": "LOW_PRIORITY",
+              "description": "Marketing emails, promotional content, irrelevant communications, spam"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        -16
+      ],
+      "id": "8c9d586e-7556-4839-b953-eff18815ce75",
+      "name": "Text Classifier",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_2907577957675057973"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -544,
+        48
+      ],
+      "id": "42d77e25-fdc1-4bdd-9f14-25ac7386235c",
+      "name": "Add label to message1",
+      "webhookId": "66611990-c15c-4959-b3de-6fed71c022e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_8967177578099361560"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -544,
+        208
+      ],
+      "id": "f7d42aff-683b-44b1-8b5f-70ef29f19628",
+      "name": "Add label to message2",
+      "webhookId": "66611990-c15c-4959-b3de-6fed71c022e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "IMPORTANT",
+          "Label_4593373439792442764"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -656,
+        -64
+      ],
+      "id": "d884f3f9-b494-455f-8c29-dfcd33935a6c",
+      "name": "Add label to message",
+      "webhookId": "c5c1431b-4c6a-44e0-8b0f-3b0cb4eff8fb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=<Prompt> \n\nThe email body is- {{ $('Gmail Trigger').item.json.snippet }}\n\nAlways end your email with Thanks & Regards\n<Name>\nDon't give me subject in output\n\nOther Instruction-\nAbout my company- \nAbout the role"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -384,
+        -112
+      ],
+      "id": "040419e4-e595-4701-a271-6035ee67cf3c",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ocvYNlVW5KgvEOvD",
+          "name": "OpenAi nitin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $('Gmail Trigger').item.json.Subject }}",
+        "message": "={{ $json.message.content }}",
+        "options": {
+          "threadId": "={{ $('Gmail Trigger').item.json.threadId }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        -32
+      ],
+      "id": "5ca5fc3e-0d1f-4874-8c1c-53afa917fec6",
+      "name": "Create a draft",
+      "webhookId": "7e9209d3-5fdd-449f-be62-452bd9183d8e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1120,
+        352
+      ],
+      "id": "6dd74205-c34d-4187-be67-f54cfe47ce45",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ocvYNlVW5KgvEOvD",
+          "name": "OpenAi nitin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_425373573489443269"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        336
+      ],
+      "id": "85da2661-8947-485c-9840-af00908fb13d",
+      "name": "Add label to message3",
+      "webhookId": "66611990-c15c-4959-b3de-6fed71c022e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_425373573489443269"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        512
+      ],
+      "id": "435c4c1e-f4a2-436f-97f5-72c7476c1015",
+      "name": "Add label to message4",
+      "webhookId": "66611990-c15c-4959-b3de-6fed71c022e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XpyHw3wilPBlRi8h",
+          "name": "NZ gmail"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19aef724f9b48533",
+          "threadId": "19aef724f9b48533",
+          "snippet": "Dear Nitin, Please use to Promotion code to avai discount",
+          "payload": {
+            "mimeType": "multipart/alternative"
+          },
+          "sizeEstimate": 5867,
+          "historyId": "22556728",
+          "internalDate": "1764953824000",
+          "labels": [
+            {
+              "id": "INBOX",
+              "name": "INBOX"
+            },
+            {
+              "id": "IMPORTANT",
+              "name": "IMPORTANT"
+            },
+            {
+              "id": "CATEGORY_PERSONAL",
+              "name": "CATEGORY_PERSONAL"
+            },
+            {
+              "id": "UNREAD",
+              "name": "UNREAD"
+            }
+          ],
+          "From": "Vinaykumar Patel <vinaykumar289@gmail.com>",
+          "Subject": "Promotion Code",
+          "To": "nitin@mitsde.com"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4d3086a0-e766-4602-8ba5-bdae11c55732",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2b1d1309a8711a35d16ea53ad5186dcfbca02b999c49cca6ce90a096288e68a9"
+  },
+  "id": "8Ucl2qJh6DdFtGXg",
+  "tags": []
+}
