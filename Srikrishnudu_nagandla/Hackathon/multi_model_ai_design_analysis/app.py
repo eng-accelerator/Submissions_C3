@@ -23,6 +23,10 @@ from components.orchestration import (
     create_orchestration_graph,
     execute_analysis_workflow
 )
+from components.design_comparison import (
+    compare_multiple_designs,
+    generate_side_by_side_comparison_image
+)
 
 # Import new enhanced components
 from components.enhanced_output import (
@@ -89,7 +93,7 @@ def initialize_system():
             st.stop()
 
 
-def render_enhanced_results_dashboard(final_report, image_base64):
+def render_enhanced_results_dashboard(final_report, image_base64, enabled_agents=None):
     """
     Enhanced results display with visuals and graphs
     
@@ -113,6 +117,30 @@ def render_enhanced_results_dashboard(final_report, image_base64):
         raw_recommendations = [raw_recommendations]
     elif not isinstance(raw_recommendations, list):
         raw_recommendations = []
+
+    # Surface agent-level errors in the UI
+    agent_outputs = {
+        "Visual": final_report.get("detailed_findings", {}).get("visual", {}),
+        "UX": final_report.get("detailed_findings", {}).get("ux", {}),
+        "Market": final_report.get("detailed_findings", {}).get("market", {}),
+        "Conversion": final_report.get("detailed_findings", {}).get("conversion", {}),
+        "Brand": final_report.get("detailed_findings", {}).get("brand", {}),
+    }
+    agent_errors = []
+    # Include aggregated agent errors if present
+    aggregated_errors = final_report.get("agent_errors", {})
+    for name, msg in aggregated_errors.items():
+        agent_errors.append((name.capitalize(), msg, None))
+
+    for name, payload in agent_outputs.items():
+        if isinstance(payload, dict) and "error" in payload:
+            agent_errors.append((name, payload.get("error"), payload.get("raw_content") or payload.get("details") or payload.get("raw_response")))
+    if agent_errors:
+        with st.expander("⚠️ Agent errors encountered (click to view)"):
+            for name, msg, raw in agent_errors:
+                st.warning(f"{name} agent error: {msg}")
+                if raw:
+                    st.code(str(raw)[:2000], language="json")
 
     def _normalize_rec(rec):
         """Convert simple rec formats (str/dict) into richer structure expected by charts."""
@@ -155,6 +183,7 @@ def render_enhanced_results_dashboard(final_report, image_base64):
         }
 
     normalized_recs = [_normalize_rec(r) for r in raw_recommendations]
+    enabled_agents = set(enabled_agents or ["visual", "ux", "market", "conversion", "brand"])
     
     # === TABS FOR DIFFERENT VIEWS ===
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -168,43 +197,38 @@ def render_enhanced_results_dashboard(final_report, image_base64):
     with tab1:
         st.subheader("Performance Scores")
         
-        # Gauge charts for scores
-        col1, col2, col3, col4 = st.columns(4)
-        
+        # Gauge charts for scores (only enabled agents)
         overall_score = final_report.get('overall_score', 0)
         agent_scores = final_report.get('agent_scores', {})
+        visual_score = agent_scores.get('visual', 0)
+        ux_score = agent_scores.get('ux', 0)
+        market_score = agent_scores.get('market', 0)
+        conversion_score = agent_scores.get('conversion', 0)
+        brand_score = agent_scores.get('brand', 0)
+
+        gauge_items = [("Overall Score", overall_score, True)]
+        if "visual" in enabled_agents:
+            gauge_items.append(("Visual Design", visual_score, True))
+        if "ux" in enabled_agents:
+            gauge_items.append(("User Experience", ux_score, True))
+        if "market" in enabled_agents:
+            gauge_items.append(("Market Fit", market_score, True))
+        if "conversion" in enabled_agents:
+            gauge_items.append(("Conversion/CTA", conversion_score, True))
+        if "brand" in enabled_agents:
+            gauge_items.append(("Brand Consistency", brand_score, True))
+
+        cols = st.columns(len(gauge_items))
+        for col, (title, value, show_gauge) in zip(cols, gauge_items):
+            with col:
+                try:
+                    fig = generate_score_gauge_chart(value, title)
+                    st.plotly_chart(fig, use_container_width=True)
+                except Exception:
+                    st.metric(title, f"{value}/100")
         
-        with col1:
-            try:
-                fig = generate_score_gauge_chart(overall_score, "Overall Score")
-                st.plotly_chart(fig, use_container_width=True)
-            except Exception as e:
-                st.metric("Overall Score", f"{overall_score}/100")
-        
-        with col2:
-            visual_score = agent_scores.get('visual', 0)
-            try:
-                fig = generate_score_gauge_chart(visual_score, "Visual Design")
-                st.plotly_chart(fig, use_container_width=True)
-            except Exception as e:
-                st.metric("Visual Design", f"{visual_score}/100")
-        
-        with col3:
-            ux_score = agent_scores.get('ux', 0)
-            try:
-                fig = generate_score_gauge_chart(ux_score, "User Experience")
-                st.plotly_chart(fig, use_container_width=True)
-            except Exception as e:
-                st.metric("User Experience", f"{ux_score}/100")
-        
-        with col4:
-            market_score = agent_scores.get('market', 0)
-            try:
-                fig = generate_score_gauge_chart(market_score, "Market Fit")
-                st.plotly_chart(fig, use_container_width=True)
-            except Exception as e:
-                st.metric("Market Fit", f"{market_score}/100")
-        
+        # Add breathing room before charts
+        st.markdown("<div style='height:16px;'></div>", unsafe_allow_html=True)
         st.divider()
         
         # Radar chart and category breakdown
@@ -219,24 +243,33 @@ def render_enhanced_results_dashboard(final_report, image_base64):
                 scores_dict = {
                     "Visual Design": visual_score,
                     "User Experience": ux_score,
-                    "Market Fit": market_score,
-                    "Color": visual_data.get('color_analysis', {}).get('score', visual_score),
-                    "Layout": visual_data.get('layout_analysis', {}).get('score', visual_score),
-                    "Typography": visual_data.get('typography', {}).get('score', visual_score)
+                    "Market Fit": market_score
                 }
-                fig = generate_comparison_radar_chart(scores_dict)
-                st.plotly_chart(fig, use_container_width=True)
-            except Exception as e:
-                st.warning(f"Could not generate radar chart: {e}")
+                if "conversion" in enabled_agents:
+                    scores_dict["Conversion/CTA"] = conversion_score
+                if "brand" in enabled_agents:
+                    scores_dict["Brand Consistency"] = brand_score
+                scores_dict["Color"] = visual_data.get('color_analysis', {}).get('score', visual_score)
+                scores_dict["Layout"] = visual_data.get('layout_analysis', {}).get('score', visual_score)
+                scores_dict["Typography"] = visual_data.get('typography', {}).get('score', visual_score)
+
+                # If only overall (no agents) skip chart
+                if len(scores_dict) <= 1:
+                    st.info("Radar chart hidden (no agent scores enabled).")
+                else:
+                    fig = generate_comparison_radar_chart(scores_dict)
+                    st.plotly_chart(fig, use_container_width=True)
+            except Exception:
+                st.info("Radar chart unavailable.")
         
         with col2:
-            # Category breakdown
-            if normalized_recs:
-                try:
-                    fig = generate_category_breakdown_chart(normalized_recs)
-                    st.plotly_chart(fig, use_container_width=True)
-                except Exception as e:
-                    st.warning(f"Could not generate category chart: {e}")
+                # Category breakdown
+                if normalized_recs:
+                    try:
+                        fig = generate_category_breakdown_chart(normalized_recs)
+                        st.plotly_chart(fig, use_container_width=True)
+                    except Exception:
+                        st.info("Category chart unavailable.")
         
         # Accessibility compliance
         st.divider()
@@ -298,6 +331,53 @@ def render_enhanced_results_dashboard(final_report, image_base64):
                     st.write(f"**Priority:** {priority.upper()}")
                     st.write(f"**Source:** {source}")
                     st.write(f"**Recommendation:** {rec_text}")
+
+            # Agent-specific highlights
+            st.divider()
+            st.subheader("Agent-Specific Highlights")
+            detailed = final_report.get('detailed_findings', {})
+
+            def _list_recs(items, title):
+                if items:
+                    st.markdown(f"**{title}**")
+                    for rec in items[:3]:
+                        st.write(f"• {rec}")
+
+            if "visual" in enabled_agents and detailed.get("visual"):
+                with st.expander("🎨 Visual Agent"):
+                    viz = detailed.get("visual", {})
+                    _list_recs(viz.get("color_analysis", {}).get("recommendations", []), "Color")
+                    _list_recs(viz.get("layout_analysis", {}).get("recommendations", []), "Layout")
+                    _list_recs(viz.get("typography", {}).get("recommendations", []), "Typography")
+
+            if "ux" in enabled_agents and detailed.get("ux"):
+                with st.expander("👤 UX Agent"):
+                    ux = detailed.get("ux", {})
+                    _list_recs(ux.get("usability", {}).get("recommendations", []), "Usability")
+                    _list_recs(ux.get("accessibility", {}).get("recommendations", []), "Accessibility")
+                    _list_recs(ux.get("interaction_patterns", {}).get("recommendations", []), "Interactions")
+
+            if "market" in enabled_agents and detailed.get("market"):
+                with st.expander("📈 Market Agent"):
+                    mk = detailed.get("market", {})
+                    _list_recs(mk.get("platform_optimization", {}).get("recommendations", []), "Platform Optimization")
+                    _list_recs(mk.get("trend_analysis", {}).get("recommendations", []), "Trend Alignment")
+                    _list_recs(mk.get("audience_fit", {}).get("recommendations", []), "Audience Fit")
+
+            if "conversion" in enabled_agents and detailed.get("conversion"):
+                with st.expander("🎯 Conversion Agent"):
+                    cv = detailed.get("conversion", {})
+                    _list_recs(cv.get("cta", {}).get("recommendations", []), "CTA")
+                    _list_recs(cv.get("copy", {}).get("recommendations", []), "Copy")
+                    _list_recs(cv.get("funnel_fit", {}).get("recommendations", []), "Funnel Fit")
+
+            if "brand" in enabled_agents and detailed.get("brand"):
+                with st.expander("🏷️ Brand Agent"):
+                    br = detailed.get("brand", {})
+                    _list_recs(br.get("logo_usage", {}).get("recommendations", []), "Logo Usage")
+                    _list_recs(br.get("palette_alignment", {}).get("recommendations", []), "Palette")
+                    _list_recs(br.get("typography_alignment", {}).get("recommendations", []), "Typography")
+                    _list_recs(br.get("tone_voice", {}).get("recommendations", []), "Tone/Voice")
         else:
             st.info("No specific recommendations generated.")
     
@@ -419,10 +499,12 @@ def render_enhanced_results_dashboard(final_report, image_base64):
         
         detailed = final_report.get('detailed_findings', {})
         
-        sub_tab1, sub_tab2, sub_tab3, sub_tab4 = st.tabs([
+        sub_tab1, sub_tab2, sub_tab3, sub_tab4, sub_tab5, sub_tab6 = st.tabs([
             "🎨 Visual Analysis",
             "👤 UX Analysis", 
             "📈 Market Analysis",
+            "🎯 Conversion Analysis",
+            "🏷️ Brand Analysis",
             "📋 Full Report"
         ])
         
@@ -446,8 +528,22 @@ def render_enhanced_results_dashboard(final_report, image_base64):
                 st.json(market_data)
             else:
                 st.info("No market analysis data")
-        
+
         with sub_tab4:
+            conversion_data = detailed.get('conversion', {})
+            if conversion_data:
+                st.json(conversion_data)
+            else:
+                st.info("No conversion analysis data")
+        
+        with sub_tab5:
+            brand_data = detailed.get('brand', {})
+            if brand_data:
+                st.json(brand_data)
+            else:
+                st.info("No brand analysis data")
+        
+        with sub_tab6:
             st.json(final_report)
 
 
@@ -455,10 +551,29 @@ def main():
     """
     Function 6.2: Main application entry point - Enhanced
     """
+    # Compact layout spacing for headers and sections
+    st.markdown(
+        """
+        <style>
+        .block-container {padding-top: 1rem;}
+        div[data-testid="stSidebar"] section[data-testid="stSidebarContent"] {padding-top: 0 !important;}
+        div[data-testid="stSidebar"] h2 {margin-top: 0.1rem !important; margin-bottom: 0.2rem !important;}
+        h1, h2, h3 {margin-top: 0.2rem;}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     # Title
     st.title("🎨 Multimodal Design Analysis Suite - Enhanced")
     st.markdown("*Powered by OpenRouter API + LangGraph + FAISS RAG + CLIP + Visual Analytics*")
     st.markdown("---")
+    
+    # Quick badges on why it's ideal
+    badge_cols = st.columns(3)
+    badge_cols[0].info("🧠 Multimodal Vision + Text LLM")
+    badge_cols[1].success("📚 Design RAG + Best Practices")
+    badge_cols[2].warning("🤖 Agents: Visual, UX, Market, Conversion")
     
     # Check API key
     api_key = os.getenv("OPENROUTER_API_KEY")
@@ -479,6 +594,15 @@ def main():
             "Analysis Mode",
             ["Single Design", "Compare Designs (2-5)"],
             help="Choose single design analysis or multi-design comparison"
+        )
+
+        top_k = st.slider(
+            "RAG results (top_k)",
+            min_value=1,
+            max_value=8,
+            value=3,
+            step=1,
+            help="Number of retrieved design patterns to inject into each agent prompt"
         )
         
         if analysis_mode == "Single Design":
@@ -505,6 +629,27 @@ def main():
             "Target Platform",
             ["Instagram", "Facebook", "LinkedIn", "Twitter", "Pinterest"],
             help="Select the platform this design is intended for"
+        )
+        
+        creative_type = st.selectbox(
+            "Creative Type",
+            ["Marketing Creative", "Product UI/App Screen"],
+            help="Tune analysis prompts for marketing vs product UI contexts"
+        )
+
+        agent_options = {
+            "visual": "Visual Analysis",
+            "ux": "UX Critique",
+            "market": "Market Research",
+            "conversion": "Conversion/CTA",
+            "brand": "Brand Consistency"
+        }
+        enabled_agents = st.multiselect(
+            "Select agents to run",
+            options=list(agent_options.keys()),
+            default=list(agent_options.keys()),
+            format_func=lambda k: agent_options.get(k, k),
+            help="Toggle agents to include in the workflow"
         )
         
         st.divider()
@@ -576,13 +721,18 @@ def main():
                     "image_base64": img_base64,
                     "image_embedding": img_embedding.tolist(),
                     "platform": platform,
+                    "creative_type": creative_type,
+                    "top_k": top_k,
+                    "enabled_agents": enabled_agents,
                     "image_metadata": img_metadata,
                     "visual_analysis": {},
                     "ux_analysis": {},
                     "market_analysis": {},
+                    "conversion_analysis": {},
+                    "brand_analysis": {},
                     "final_report": {},
                     "current_step": 0,
-                    "total_steps": 4,
+                    "total_steps": 6,
                     "step_message": "",
                     "model_used": os.getenv("VISION_MODEL", "openai/gpt-4-vision-preview")
                 }
@@ -604,7 +754,7 @@ def main():
                 
                 # Display enhanced results
                 final_report = final_state.get('final_report', {})
-                render_enhanced_results_dashboard(final_report, img_base64)
+                render_enhanced_results_dashboard(final_report, img_base64, enabled_agents)
                 
                 # Download button
                 st.divider()

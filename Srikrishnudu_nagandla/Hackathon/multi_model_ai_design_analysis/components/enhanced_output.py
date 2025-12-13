@@ -102,8 +102,8 @@ def generate_score_gauge_chart(score, title, color_scheme="RdYlGn"):
     ))
     
     fig.update_layout(
-        height=300,
-        margin=dict(l=20, r=20, t=50, b=20)
+        height=240,
+        margin=dict(l=10, r=10, t=30, b=10)
     )
     
     return fig

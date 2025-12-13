@@ -19,13 +19,18 @@ class AnalysisState(TypedDict):
     image_base64: str
     image_embedding: list
     platform: str
+    creative_type: str
+    enabled_agents: list
     image_metadata: dict
     model_used: str
+    top_k: int
     
     # Agent outputs
     visual_analysis: dict
     ux_analysis: dict
     market_analysis: dict
+    conversion_analysis: dict
+    brand_analysis: dict
     
     # Final output
     final_report: dict
@@ -59,16 +64,37 @@ def aggregate_results_node(state):
     visual = state.get('visual_analysis', {})
     ux = state.get('ux_analysis', {})
     market = state.get('market_analysis', {})
+    conversion = state.get('conversion_analysis', {})
+    brand = state.get('brand_analysis', {})
+    agent_errors = {}
+    def _coerce_payload(name, payload):
+        # If payload is not a dict or missing expected keys, flag it.
+        if not isinstance(payload, dict):
+            agent_errors[name] = "Invalid agent payload (non-dict)"
+            return {"error": "Invalid agent payload"}
+        if "error" in payload:
+            agent_errors[name] = payload.get("error")
+        return payload
+
+    visual = _coerce_payload("visual", visual)
+    ux = _coerce_payload("ux", ux)
+    market = _coerce_payload("market", market)
+    conversion = _coerce_payload("conversion", conversion)
+    brand = _coerce_payload("brand", brand)
     
     # Calculate overall score (weighted average)
     visual_score = safe_score(visual.get('overall_score', 0))
     ux_score = safe_score(ux.get('overall_score', 0))
     market_score = safe_score(market.get('overall_score', 0))
+    conversion_score = safe_score(conversion.get('overall_score', 0))
+    brand_score = safe_score(brand.get('overall_score', 0))
     
     overall_score = (
-        visual_score * 0.3 +
-        ux_score * 0.4 +
-        market_score * 0.3
+        visual_score * 0.2 +
+        ux_score * 0.2 +
+        market_score * 0.2 +
+        conversion_score * 0.2 +
+        brand_score * 0.2
     )
     
     # Aggregate all recommendations
@@ -146,6 +172,71 @@ def aggregate_results_node(state):
                 "priority": "medium",
                 "recommendation": tip
             })
+
+    # From conversion analysis
+    if 'cta' in conversion:
+        recs = conversion['cta'].get('recommendations', [])
+        for rec in recs[:3]:
+            all_recommendations.append({
+                "source": "Conversion - CTA",
+                "priority": "high",
+                "recommendation": rec
+            })
+
+    if 'copy' in conversion:
+        recs = conversion['copy'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Conversion - Copy",
+                "priority": "medium",
+                "recommendation": rec
+            })
+
+    if 'funnel_fit' in conversion:
+        recs = conversion['funnel_fit'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Conversion - Funnel",
+                "priority": "medium",
+                "recommendation": rec
+            })
+
+    # From brand analysis
+    if 'logo_usage' in brand:
+        recs = brand['logo_usage'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Brand - Logo",
+                "priority": "high",
+                "recommendation": rec
+            })
+
+    if 'palette_alignment' in brand:
+        recs = brand['palette_alignment'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Brand - Palette",
+                "priority": "medium",
+                "recommendation": rec
+            })
+
+    if 'typography_alignment' in brand:
+        recs = brand['typography_alignment'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Brand - Typography",
+                "priority": "medium",
+                "recommendation": rec
+            })
+
+    if 'tone_voice' in brand:
+        recs = brand['tone_voice'].get('recommendations', [])
+        for rec in recs[:2]:
+            all_recommendations.append({
+                "source": "Brand - Tone",
+                "priority": "medium",
+                "recommendation": rec
+            })
     
     # Limit to top 10 recommendations
     prioritized_recommendations = all_recommendations[:10]
@@ -156,16 +247,22 @@ def aggregate_results_node(state):
         "agent_scores": {
             "visual": round(visual_score, 1),
             "ux": round(ux_score, 1),
-            "market": round(market_score, 1)
+            "market": round(market_score, 1),
+            "conversion": round(conversion_score, 1),
+            "brand": round(brand_score, 1)
         },
         "top_recommendations": prioritized_recommendations,
         "detailed_findings": {
             "visual": visual,
             "ux": ux,
-            "market": market
+            "market": market,
+            "conversion": conversion,
+            "brand": brand
         },
+        "agent_errors": agent_errors,
         "metadata": state.get('image_metadata', {}),
         "platform": state.get('platform', 'Unknown'),
+        "creative_type": state.get('creative_type', 'General'),
         "timestamp": datetime.now().isoformat(),
         "model_used": state.get('model_used', 'Unknown')
     }
@@ -173,6 +270,20 @@ def aggregate_results_node(state):
     state['current_step'] = state.get('current_step', 0) + 1
     print("📊 Aggregating results completed!")
     return state
+
+
+def _maybe_skip(agent_name, output_key, agent_fn):
+    """
+    Wrap agent to allow skipping when disabled by user selection.
+    """
+    def runner(state):
+        enabled = state.get("enabled_agents", [])
+        if enabled and agent_name not in enabled:
+            state[output_key] = {"error": "skipped_by_user"}
+            state['current_step'] = state.get('current_step', 0) + 1
+            return state
+        return agent_fn(state)
+    return runner
 
 
 def create_orchestration_graph(faiss_index, metadata):
@@ -186,7 +297,7 @@ def create_orchestration_graph(faiss_index, metadata):
     Returns:
         Compiled LangGraph application
     """
-    from components.agents import visual_analysis_agent, ux_critique_agent, market_research_agent
+    from components.agents import visual_analysis_agent, ux_critique_agent, market_research_agent, conversion_optimization_agent, brand_consistency_agent
     
     # Initialize graph
     workflow = StateGraph(AnalysisState)
@@ -194,15 +305,43 @@ def create_orchestration_graph(faiss_index, metadata):
     # Add nodes (agents)
     workflow.add_node(
         "visual_agent",
-        lambda state: visual_analysis_agent(state, faiss_index, metadata)
+        _maybe_skip(
+            "visual",
+            "visual_analysis",
+            lambda state: visual_analysis_agent(state, faiss_index, metadata, state.get("top_k", 3))
+        )
     )
     workflow.add_node(
         "ux_agent",
-        lambda state: ux_critique_agent(state, faiss_index, metadata)
+        _maybe_skip(
+            "ux",
+            "ux_analysis",
+            lambda state: ux_critique_agent(state, faiss_index, metadata, state.get("top_k", 3))
+        )
     )
     workflow.add_node(
         "market_agent",
-        lambda state: market_research_agent(state, faiss_index, metadata)
+        _maybe_skip(
+            "market",
+            "market_analysis",
+            lambda state: market_research_agent(state, faiss_index, metadata, state.get("top_k", 3))
+        )
+    )
+    workflow.add_node(
+        "conversion_agent",
+        _maybe_skip(
+            "conversion",
+            "conversion_analysis",
+            lambda state: conversion_optimization_agent(state, faiss_index, metadata, state.get("top_k", 3))
+        )
+    )
+    workflow.add_node(
+        "brand_agent",
+        _maybe_skip(
+            "brand",
+            "brand_analysis",
+            lambda state: brand_consistency_agent(state, faiss_index, metadata, state.get("top_k", 3))
+        )
     )
     workflow.add_node("aggregator", aggregate_results_node)
     
@@ -210,7 +349,9 @@ def create_orchestration_graph(faiss_index, metadata):
     workflow.set_entry_point("visual_agent")
     workflow.add_edge("visual_agent", "ux_agent")
     workflow.add_edge("ux_agent", "market_agent")
-    workflow.add_edge("market_agent", "aggregator")
+    workflow.add_edge("market_agent", "conversion_agent")
+    workflow.add_edge("conversion_agent", "brand_agent")
+    workflow.add_edge("brand_agent", "aggregator")
     workflow.add_edge("aggregator", END)
     
     # Compile
@@ -232,7 +373,7 @@ def execute_analysis_workflow(graph, initial_state, progress_callback=None):
     Returns:
         dict: Final state after all agents complete
     """
-    step_names = ["Visual Analysis", "UX Critique", "Market Research", "Aggregating Results"]
+    step_names = ["Visual Analysis", "UX Critique", "Market Research", "Conversion Optimization", "Brand Consistency", "Aggregating Results"]
     total_steps = len(step_names)
     
     try:

@@ -8,6 +8,7 @@ Technology: OpenRouter API (GPT-4V or other vision models)
 import requests
 import json
 import os
+import time
 from dotenv import load_dotenv
 from components.rag_system import retrieve_relevant_patterns, augment_prompt_with_rag
 
@@ -21,7 +22,7 @@ SITE_URL = os.getenv("SITE_URL", "http://localhost:8501")
 APP_NAME = os.getenv("APP_NAME", "DesignAnalysisPoc")
 
 
-def call_openrouter_vision(image_base64, prompt, temperature=0.7, max_tokens=2000):
+def call_openrouter_vision(image_base64, prompt, temperature=0.7, max_tokens=2000, retries=2, backoff=1.5):
     """
     Function 4.1: Core function to call OpenRouter Vision API
     
@@ -34,96 +35,124 @@ def call_openrouter_vision(image_base64, prompt, temperature=0.7, max_tokens=200
     Returns:
         dict: Parsed JSON response
     """
-    try:
-        headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-            "HTTP-Referer": SITE_URL,
-            "X-Title": APP_NAME,
-            "Content-Type": "application/json"
-        }
-        
-        data = {
-            "model": VISION_MODEL,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "response_format": {"type": "json_object"}
-        }
-        
-        base_url = OPENROUTER_BASE_URL.rstrip("/")
-        response = requests.post(
-            f"{base_url}/chat/completions",
-            headers=headers,
-            json=data,
-            timeout=60
-        )
-        
-        if response.status_code == 200:
-            try:
-                result = response.json()
-            except ValueError:
-                return {
-                    "error": "Invalid JSON response from API",
-                    "raw_content": response.text
-                }
-            
-            choices = result.get("choices", [])
-            if not choices:
-                return {
-                    "error": "Empty response from model",
-                    "raw_response": result
-                }
-            
-            content = choices[0].get("message", {}).get("content", "")
-            if not content:
-                return {
-                    "error": "Empty content from model",
-                    "raw_response": result
-                }
-            
-            # Parse JSON response from model output
-            try:
-                return json.loads(content)
-            except json.JSONDecodeError:
-                return {
-                    "error": "Invalid JSON response",
-                    "raw_content": content,
-                    "raw_response": result
-                }
-        else:
-            # Try to parse error body for more detail
-            try:
-                details = response.json()
-            except ValueError:
-                details = response.text
-            return {
-                "error": f"API error: {response.status_code}",
-                "details": details
-            }
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "HTTP-Referer": SITE_URL,
+        "X-Title": APP_NAME,
+        "Content-Type": "application/json"
+    }
     
-    except Exception as e:
-        return {
-            "error": f"Exception in API call: {str(e)}"
-        }
+    data = {
+        "model": VISION_MODEL,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{image_base64}"
+                        }
+                    }
+                ]
+            }
+        ],
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+        "response_format": {"type": "json_object"}
+    }
+    
+    last_error = None
+    for attempt in range(retries + 1):
+        try:
+            base_url = OPENROUTER_BASE_URL.rstrip("/")
+            response = requests.post(
+                f"{base_url}/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                try:
+                    result = response.json()
+                except ValueError:
+                    last_error = {
+                        "error": "Invalid JSON response from API",
+                        "raw_content": response.text
+                    }
+                    print("❌ Invalid JSON response from API")
+                    raise ValueError("invalid json")
+                
+                choices = result.get("choices", [])
+                if not choices:
+                    last_error = {
+                        "error": "Empty response from model",
+                        "raw_response": result
+                    }
+                    print("❌ Empty response from model")
+                    raise ValueError("empty choices")
+                
+                content = choices[0].get("message", {}).get("content", "")
+                if not content:
+                    last_error = {
+                        "error": "Empty content from model",
+                        "raw_response": result
+                    }
+                    print("❌ Empty content from model")
+                    raise ValueError("empty content")
+                
+                # Parse JSON response from model output
+                try:
+                    parsed = json.loads(content)
+                    # If model returned stringified JSON inside a key, attempt to parse
+                    if isinstance(parsed, dict):
+                        for k, v in list(parsed.items()):
+                            if isinstance(v, str) and v.strip().startswith("{"):
+                                try:
+                                    parsed[k] = json.loads(v)
+                                except Exception:
+                                    pass
+                    return parsed
+                except json.JSONDecodeError:
+                    last_error = {
+                        "error": "Invalid JSON response",
+                        "raw_content": content,
+                        "raw_response": result
+                    }
+                    print("❌ Invalid JSON response content")
+                    raise ValueError("invalid json content")
+            else:
+                # Try to parse error body for more detail
+                try:
+                    details = response.json()
+                except ValueError:
+                    details = response.text
+                last_error = {
+                    "error": f"API error: {response.status_code}",
+                    "details": details
+                }
+                print(f"❌ API error: {response.status_code} -> {details}")
+                raise ValueError(f"status {response.status_code}")
+        
+        except Exception as e:
+            # retry if attempts remain
+            if attempt < retries:
+                sleep_for = backoff ** attempt
+                print(f"🔁 Retry {attempt+1}/{retries} after error: {e}. Sleeping {sleep_for:.2f}s")
+                time.sleep(sleep_for)
+                continue
+            else:
+                break
+    
+    return last_error or {"error": "Unknown error"}
 
 
-def visual_analysis_agent(state, faiss_index, metadata):
+def visual_analysis_agent(state, faiss_index, metadata, top_k=3):
     """
     Function 4.2: Visual Analysis Agent with RAG
     
@@ -138,13 +167,14 @@ def visual_analysis_agent(state, faiss_index, metadata):
     print("🎨 Running Visual Analysis Agent...")
     
     # Retrieve relevant patterns
-    query = f"visual design color theory layout composition typography {state['platform']}"
+    creative = state.get("creative_type", "")
+    query = f"visual design color theory layout composition typography {state['platform']} {creative}"
     patterns = retrieve_relevant_patterns(
-        query, faiss_index, metadata, state['platform'], top_k=5
+        query, faiss_index, metadata, state['platform'], top_k=top_k
     )
     
     # Base prompt
-    base_prompt = f"""You are an expert visual design analyst. Analyze this {state['platform']} social media design image.
+    base_prompt = f"""You are an expert visual design analyst. Analyze this {state['platform']} {creative} design image.
 
 **EVALUATION CRITERIA:**
 
@@ -198,7 +228,7 @@ Return ONLY valid JSON, no other text."""
     enhanced_prompt = augment_prompt_with_rag(base_prompt, patterns)
     
     # Call vision API
-    result = call_openrouter_vision(state['image_base64'], enhanced_prompt)
+    result = call_openrouter_vision(state['image_base64'], enhanced_prompt, retries=3)
     
     # Update state
     state['visual_analysis'] = result
@@ -207,7 +237,7 @@ Return ONLY valid JSON, no other text."""
     return state
 
 
-def ux_critique_agent(state, faiss_index, metadata):
+def ux_critique_agent(state, faiss_index, metadata, top_k=3):
     """
     Function 4.3: UX Critique Agent with RAG
     
@@ -222,12 +252,13 @@ def ux_critique_agent(state, faiss_index, metadata):
     print("👤 Running UX Critique Agent...")
     
     # Retrieve UX patterns
-    query = f"user experience usability accessibility heuristics {state['platform']}"
+    creative = state.get("creative_type", "")
+    query = f"user experience usability accessibility heuristics {state['platform']} {creative}"
     patterns = retrieve_relevant_patterns(
-        query, faiss_index, metadata, state['platform'], top_k=5
+        query, faiss_index, metadata, state['platform'], top_k=top_k
     )
     
-    base_prompt = f"""You are a UX expert specializing in {state['platform']} design. Analyze this design for usability and user experience.
+    base_prompt = f"""You are a UX expert specializing in {state['platform']} {creative} design. Analyze this design for usability and user experience.
 
 **EVALUATION CRITERIA:**
 
@@ -276,7 +307,7 @@ def ux_critique_agent(state, faiss_index, metadata):
 Return ONLY valid JSON, no other text."""
     
     enhanced_prompt = augment_prompt_with_rag(base_prompt, patterns)
-    result = call_openrouter_vision(state['image_base64'], enhanced_prompt)
+    result = call_openrouter_vision(state['image_base64'], enhanced_prompt, retries=3)
     
     state['ux_analysis'] = result
     state['current_step'] = state.get('current_step', 0) + 1
@@ -284,7 +315,7 @@ Return ONLY valid JSON, no other text."""
     return state
 
 
-def market_research_agent(state, faiss_index, metadata):
+def market_research_agent(state, faiss_index, metadata, top_k=3):
     """
     Function 4.4: Market Research Agent with RAG
     
@@ -299,12 +330,13 @@ def market_research_agent(state, faiss_index, metadata):
     print("📈 Running Market Research Agent...")
     
     # Retrieve market patterns
-    query = f"marketing trends engagement {state['platform']} target audience social media"
+    creative = state.get("creative_type", "")
+    query = f"marketing trends engagement {state['platform']} {creative} target audience social media"
     patterns = retrieve_relevant_patterns(
-        query, faiss_index, metadata, state['platform'], top_k=5
+        query, faiss_index, metadata, state['platform'], top_k=top_k
     )
     
-    base_prompt = f"""You are a social media marketing analyst specializing in {state['platform']}. Analyze this design for market fit and engagement potential.
+    base_prompt = f"""You are a social media marketing analyst specializing in {state['platform']} {creative}. Analyze this design for market fit and engagement potential.
 
 **EVALUATION CRITERIA:**
 
@@ -360,9 +392,119 @@ def market_research_agent(state, faiss_index, metadata):
 Return ONLY valid JSON, no other text."""
     
     enhanced_prompt = augment_prompt_with_rag(base_prompt, patterns)
-    result = call_openrouter_vision(state['image_base64'], enhanced_prompt)
+    result = call_openrouter_vision(state['image_base64'], enhanced_prompt, retries=3)
     
     state['market_analysis'] = result
+    state['current_step'] = state.get('current_step', 0) + 1
+    
+    return state
+
+
+def conversion_optimization_agent(state, faiss_index, metadata, top_k=3):
+    """
+    Function 4.5: Conversion/CTA Optimization Agent
+    Focuses on action clarity, messaging, and funnel readiness.
+    """
+    print("🎯 Running Conversion Optimization Agent...")
+    
+    creative = state.get("creative_type", "")
+    query = f"conversion optimization CTA clarity persuasive copy {state['platform']} {creative}"
+    patterns = retrieve_relevant_patterns(
+        query, faiss_index, metadata, state['platform'], top_k=top_k
+    )
+    
+    base_prompt = f"""You are a conversion rate optimization specialist evaluating this {state['platform']} {creative} creative.
+
+Focus on messaging clarity, CTA prominence, incentive strength, and friction removal.
+
+REQUIRED JSON OUTPUT:
+{{
+  "overall_score": <0-100>,
+  "cta": {{
+    "score": <0-100>,
+    "visibility": <0-100>,
+    "clarity_findings": ["finding1","finding2"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "copy": {{
+    "score": <0-100>,
+    "value_prop_strength": <0-100>,
+    "findings": ["finding1","finding2"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "funnel_fit": {{
+    "score": <0-100>,
+    "barriers": ["barrier1","barrier2"],
+    "recommendations": ["rec1","rec2"]
+  }}
+}}
+
+Return ONLY valid JSON."""
+    
+    enhanced_prompt = augment_prompt_with_rag(base_prompt, patterns)
+    result = call_openrouter_vision(state['image_base64'], enhanced_prompt, retries=3)
+    
+    state['conversion_analysis'] = result
+    state['current_step'] = state.get('current_step', 0) + 1
+    
+    return state
+
+
+def brand_consistency_agent(state, faiss_index, metadata, top_k=3):
+    """
+    Function 4.6: Brand Consistency Agent
+    Audits logo usage, palette, typography, tone, and layout against brand best practices.
+    """
+    print("🏷️ Running Brand Consistency Agent...")
+    
+    creative = state.get("creative_type", "")
+    query = f"brand consistency visual identity logo typography palette tone {state['platform']} {creative}"
+    patterns = retrieve_relevant_patterns(
+        query, faiss_index, metadata, state['platform'], top_k=top_k
+    )
+    
+    base_prompt = f"""You are a brand guardian evaluating this {state['platform']} {creative} asset for brand consistency.
+
+Assess alignment to typical brand standards: logo use/clearspace, approved palette, typography families/weights, tone/voice, component styling, and imagery style.
+
+REQUIRED JSON OUTPUT:
+{{
+  "overall_score": <0-100>,
+  "logo_usage": {{
+    "score": <0-100>,
+    "issues": ["issue1","issue2"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "palette_alignment": {{
+    "score": <0-100>,
+    "allowed_palette_match": ["#hex1","#hex2"],
+    "off_brand_colors": ["#hexX"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "typography_alignment": {{
+    "score": <0-100>,
+    "on_brand_fonts": ["font1"],
+    "off_brand_fonts": ["fontX"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "tone_voice": {{
+    "score": <0-100>,
+    "findings": ["finding1","finding2"],
+    "recommendations": ["rec1","rec2"]
+  }},
+  "component_style": {{
+    "score": <0-100>,
+    "alignment_notes": ["note1","note2"],
+    "recommendations": ["rec1","rec2"]
+  }}
+}}
+
+Return ONLY valid JSON."""
+    
+    enhanced_prompt = augment_prompt_with_rag(base_prompt, patterns)
+    result = call_openrouter_vision(state['image_base64'], enhanced_prompt, retries=3)
+    
+    state['brand_analysis'] = result
     state['current_step'] = state.get('current_step', 0) + 1
     
     return state

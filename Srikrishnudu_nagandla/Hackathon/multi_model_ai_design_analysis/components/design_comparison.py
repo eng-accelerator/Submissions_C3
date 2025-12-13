@@ -161,7 +161,7 @@ Return ONLY valid JSON."""
         }
         
         data = {
-            "model": os.getenv("VISION_MODEL", "openai/gpt-4-vision-preview"),
+            "model": os.getenv("VISION_MODEL", "openai/gpt-4o"),
             "messages": [{"role": "user", "content": content}],
             "max_tokens": 3000,
             "temperature": 0.7,
