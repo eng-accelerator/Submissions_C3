@@ -1,0 +1,6 @@
+# Required software
+- Python 3.9 or higher
+- pip (Python package manager)
+- Git (optional)
+- 8GB RAM minimum
+- GPU optional (for CLIP, works on CPU too)

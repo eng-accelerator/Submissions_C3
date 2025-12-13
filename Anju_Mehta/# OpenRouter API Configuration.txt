@@ -1,0 +1,15 @@
+# OpenRouter API Configuration
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+
+# Model Selection (choose one or multiple)
+VISION_MODEL=openai/gpt-4-vision-preview
+# Alternative models available on OpenRouter:
+# VISION_MODEL=anthropic/claude-3-opus
+# VISION_MODEL=anthropic/claude-3-sonnet
+# VISION_MODEL=google/gemini-pro-vision
+
+EMBEDDING_MODEL=openai/text-embedding-3-small
+
+# Optional: Your site URL and app name for OpenRouter
+SITE_URL=http://localhost:8501
+APP_NAME=DesignAnalysisPoc

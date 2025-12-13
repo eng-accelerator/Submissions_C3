@@ -1,0 +1,5 @@
+# Install CLIP separately
+pip install git+https://github.com/openai/CLIP.git
+
+# Install all dependencies
+pip install -r requirements.txt

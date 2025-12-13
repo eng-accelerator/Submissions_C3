@@ -1,0 +1,10 @@
+# Create project directory
+mkdir design_analysis_poc
+cd design_analysis_poc
+
+# Create subdirectories
+mkdir components prompts data utils
+
+# Create empty __init__.py files
+touch components/__init__.py
+touch utils/__init__.py

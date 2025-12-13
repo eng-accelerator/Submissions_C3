@@ -1,0 +1,22 @@
+## STEP 5: Run the Application
+
+### Setup Commands:
+```bash
+# 1. Navigate to project directory
+cd design_analysis_poc
+
+# 2. Create and activate virtual environment (recommended)
+python -m venv venv
+
+# On Windows:
+venv\Scripts\activate
+
+# On Mac/Linux:
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+pip install git+https://github.com/openai/CLIP.git
+
+# 4. Edit .env file with your OpenRouter API key
+# (Use any text editor)
