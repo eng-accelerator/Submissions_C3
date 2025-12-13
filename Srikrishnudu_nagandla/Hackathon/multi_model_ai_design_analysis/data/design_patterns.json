@@ -1,0 +1,302 @@
+[
+  {
+    "id": "rule_of_thirds",
+    "title": "Rule of Thirds",
+    "category": "composition",
+    "description": "Divide the image into 9 equal parts using 2 horizontal and 2 vertical lines. Place key elements along these lines or at their intersections for balanced composition.",
+    "best_practice": "Position focal points (faces, products, CTAs) at intersection points. Avoid centering subjects unless intentional symmetry is desired.",
+    "platforms": ["Instagram", "Facebook", "Pinterest", "LinkedIn"],
+    "examples": "Instagram posts with subjects at intersections achieve 30% higher engagement",
+    "metrics": "+30% engagement, +25% time on post"
+  },
+  {
+    "id": "color_psychology",
+    "title": "Color Psychology for Social Media",
+    "category": "color",
+    "description": "Colors evoke specific emotions: Blue (trust, calm), Red (urgency, excitement), Green (growth, health), Yellow (optimism, attention), Purple (luxury, creativity), Orange (enthusiasm, action).",
+    "best_practice": "Use 60-30-10 rule: 60% dominant color, 30% secondary, 10% accent. Ensure colors align with brand identity and desired emotional response.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn", "Twitter"],
+    "examples": "Blue increases LinkedIn CTR by 23%, Red increases urgency perception by 40%",
+    "metrics": "+23% CTR on professional platforms, +80% brand recognition"
+  },
+  {
+    "id": "f_pattern_scanning",
+    "title": "F-Pattern Eye Tracking",
+    "category": "layout",
+    "description": "Users scan content in an F-shaped pattern: horizontal scan at top, second horizontal scan lower, vertical scan on left side. Critical for text-heavy designs.",
+    "best_practice": "Place most important information in top-left quadrant. Position CTAs along left side or at F-pattern hotspots.",
+    "platforms": ["Facebook", "LinkedIn", "Web"],
+    "examples": "Designs following F-pattern see 35% better information retention",
+    "metrics": "+35% information retention, +28% CTA clicks"
+  },
+  {
+    "id": "z_pattern_layout",
+    "title": "Z-Pattern Layout",
+    "category": "layout",
+    "description": "For minimal text designs, eyes move in Z-shape: top-left to top-right, diagonal to bottom-left, then to bottom-right. Ideal for landing pages and ads.",
+    "best_practice": "Logo top-left, value proposition top-right, secondary info middle-left, CTA bottom-right.",
+    "platforms": ["Instagram", "Facebook", "Twitter"],
+    "examples": "Z-pattern ads show 42% higher conversion rates",
+    "metrics": "+42% conversion rate"
+  },
+  {
+    "id": "white_space_breathing",
+    "title": "White Space (Negative Space)",
+    "category": "composition",
+    "description": "Empty space around elements that provides visual breathing room. Increases readability, focus, and perceived luxury.",
+    "best_practice": "Use at least 30% white space for premium feel. Avoid cluttering. Let important elements breathe.",
+    "platforms": ["Instagram", "LinkedIn", "Pinterest"],
+    "examples": "Designs with 40%+ white space perceived as 25% more premium",
+    "metrics": "+25% premium perception, +18% comprehension"
+  },
+  {
+    "id": "contrast_accessibility",
+    "title": "WCAG Contrast Ratios",
+    "category": "accessibility",
+    "description": "Minimum contrast ratio of 4.5:1 for normal text, 3:1 for large text (18pt+). Ensures readability for visually impaired users.",
+    "best_practice": "Use online contrast checkers. Aim for AA standard minimum, AAA (7:1) for critical text. Never use light gray on white.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn", "Twitter"],
+    "examples": "WCAG AA compliance increases readership by 50% across demographics",
+    "metrics": "+50% readership, legal compliance"
+  },
+  {
+    "id": "typography_hierarchy",
+    "title": "Typographic Hierarchy",
+    "category": "typography",
+    "description": "Clear distinction between headings, subheadings, body text, and captions through size, weight, and spacing.",
+    "best_practice": "Use 3-4 hierarchy levels maximum. Heading 2-3x larger than body. Line height 1.5x font size for body text.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn"],
+    "examples": "Clear hierarchy improves scanability by 60%",
+    "metrics": "+60% scanability, +40% comprehension"
+  },
+  {
+    "id": "golden_ratio",
+    "title": "Golden Ratio (1:1.618)",
+    "category": "composition",
+    "description": "Mathematical ratio found in nature that creates aesthetically pleasing proportions. Used for layout divisions, image cropping, typography sizing.",
+    "best_practice": "Divide layouts using 1:1.618 ratio. Use for column widths, image dimensions, font size relationships.",
+    "platforms": ["Instagram", "Pinterest", "Web"],
+    "examples": "Golden ratio designs rated 40% more aesthetically pleasing",
+    "metrics": "+40% aesthetic preference"
+  },
+  {
+    "id": "color_harmony_schemes",
+    "title": "Color Harmony Schemes",
+    "category": "color",
+    "description": "Complementary (opposite on wheel), analogous (adjacent), triadic (equidistant), monochromatic (single hue variations).",
+    "best_practice": "Complementary for high contrast/attention, analogous for harmony, triadic for vibrancy, monochromatic for elegance.",
+    "platforms": ["Instagram", "Pinterest", "Facebook"],
+    "examples": "Harmonious palettes increase visual appeal by 45%",
+    "metrics": "+45% visual appeal rating"
+  },
+  {
+    "id": "cta_button_design",
+    "title": "CTA Button Optimization",
+    "category": "ux",
+    "description": "Call-to-action buttons should be visually distinct, action-oriented, and appropriately sized (minimum 44x44px for touch).",
+    "best_practice": "Use contrasting colors, action verbs (Get, Start, Join vs Learn More), sufficient padding, clear hover states.",
+    "platforms": ["Facebook", "Instagram", "LinkedIn"],
+    "examples": "Optimized CTAs show 90% higher click-through rates",
+    "metrics": "+90% CTR"
+  },
+  {
+    "id": "visual_hierarchy_weight",
+    "title": "Visual Weight & Balance",
+    "category": "composition",
+    "description": "Larger, darker, more colorful elements carry more visual weight. Balance prevents designs from feeling lopsided.",
+    "best_practice": "Distribute visual weight evenly or intentionally. Use symmetrical balance for formal feel, asymmetrical for dynamic feel.",
+    "platforms": ["Instagram", "Pinterest", "LinkedIn"],
+    "examples": "Balanced designs reduce cognitive load by 30%",
+    "metrics": "+30% reduced cognitive load"
+  },
+  {
+    "id": "instagram_aspect_ratios",
+    "title": "Instagram Optimal Dimensions",
+    "category": "platform",
+    "description": "Feed posts: 1080x1080px (1:1) or 1080x1350px (4:5), Stories: 1080x1920px (9:16), Reels: 1080x1920px (9:16).",
+    "best_practice": "Use 4:5 for feed posts (more screen real estate), 9:16 for Stories/Reels. Keep text within safe zones (top/bottom 250px).",
+    "platforms": ["Instagram"],
+    "examples": "4:5 posts get 23% more engagement than 1:1",
+    "metrics": "+23% engagement over square posts"
+  },
+  {
+    "id": "facebook_text_overlay",
+    "title": "Facebook 20% Text Rule (Deprecated but Effective)",
+    "category": "platform",
+    "description": "While Facebook removed the 20% text rule for ads, images with less text still perform better.",
+    "best_practice": "Keep text minimal on images. Use overlays sparingly. Put detailed copy in post text instead.",
+    "platforms": ["Facebook"],
+    "examples": "Images with <10% text see 45% better reach",
+    "metrics": "+45% organic reach"
+  },
+  {
+    "id": "linkedin_professional_aesthetic",
+    "title": "LinkedIn Professional Design Standards",
+    "category": "platform",
+    "description": "Clean, professional aesthetic with corporate color schemes. Data visualizations and infographics perform well.",
+    "best_practice": "Use blue/gray color schemes, san-serif fonts, data-driven content. Avoid overly casual or flashy designs.",
+    "platforms": ["LinkedIn"],
+    "examples": "Professional designs get 2.3x more engagement on LinkedIn",
+    "metrics": "+130% engagement vs casual designs"
+  },
+  {
+    "id": "mobile_first_design",
+    "title": "Mobile-First Responsive Design",
+    "category": "ux",
+    "description": "80%+ of social media users access platforms on mobile. Designs must work perfectly on small screens.",
+    "best_practice": "Design for 375x667px (iPhone SE) minimum. Use large touch targets (44px+), readable fonts (16px+ body), clear CTAs.",
+    "platforms": ["Instagram", "Facebook", "Twitter", "LinkedIn"],
+    "examples": "Mobile-optimized designs show 73% higher conversion",
+    "metrics": "+73% mobile conversion"
+  },
+  {
+    "id": "gestalt_proximity",
+    "title": "Gestalt Principle: Proximity",
+    "category": "composition",
+    "description": "Elements close together are perceived as related. Group related items, separate unrelated ones.",
+    "best_practice": "Use consistent spacing. Group related text/images closely (8-12px), separate sections with larger gaps (24-48px).",
+    "platforms": ["Instagram", "Facebook", "LinkedIn"],
+    "examples": "Proper grouping improves information processing by 40%",
+    "metrics": "+40% information processing speed"
+  },
+  {
+    "id": "font_pairing",
+    "title": "Font Pairing Best Practices",
+    "category": "typography",
+    "description": "Combining typefaces effectively: contrast (serif + sans-serif), consistent mood, limited to 2-3 fonts maximum.",
+    "best_practice": "Pair serif headings with sans-serif body, or geometric sans with humanist sans. Use font weight variation for hierarchy.",
+    "platforms": ["Instagram", "LinkedIn", "Facebook"],
+    "examples": "Good font pairing increases readability by 35%",
+    "metrics": "+35% readability score"
+  },
+  {
+    "id": "directional_cues",
+    "title": "Directional Visual Cues",
+    "category": "ux",
+    "description": "Arrows, lines, eye gaze, pointing gestures direct user attention to important elements like CTAs.",
+    "best_practice": "Use subtle arrows or lines to guide eyes to CTA. Show person looking at product. Use diagonal lines for movement.",
+    "platforms": ["Facebook", "Instagram", "Pinterest"],
+    "examples": "Directional cues increase CTA clicks by 52%",
+    "metrics": "+52% CTA engagement"
+  },
+  {
+    "id": "social_proof_elements",
+    "title": "Social Proof Visual Integration",
+    "category": "market",
+    "description": "Testimonials, user counts, ratings, verified badges, press logos build trust and credibility.",
+    "best_practice": "Show real faces in testimonials, use star ratings, display user counts (10K+ users), add trust badges.",
+    "platforms": ["Facebook", "LinkedIn", "Instagram"],
+    "examples": "Social proof increases conversion by 63%",
+    "metrics": "+63% conversion rate"
+  },
+  {
+    "id": "urgency_scarcity",
+    "title": "Urgency & Scarcity Design Elements",
+    "category": "market",
+    "description": "Limited time offers, countdown timers, low stock indicators, exclusive access create FOMO.",
+    "best_practice": "Use red/orange for urgency, show timers, display 'Only X left', add 'Limited time' badges.",
+    "platforms": ["Instagram", "Facebook"],
+    "examples": "Urgency indicators boost conversions by 55%",
+    "metrics": "+55% conversion rate"
+  },
+  {
+    "id": "brand_consistency",
+    "title": "Brand Visual Consistency",
+    "category": "brand",
+    "description": "Consistent use of colors, fonts, logo placement, imagery style across all posts builds recognition.",
+    "best_practice": "Create brand guidelines: color palette (3-5 colors), 2-3 fonts, logo placement rules, photo filter/style.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn", "Twitter"],
+    "examples": "Consistent branding increases recognition by 80%",
+    "metrics": "+80% brand recognition"
+  },
+  {
+    "id": "video_thumbnail_optimization",
+    "title": "Video Thumbnail Best Practices",
+    "category": "platform",
+    "description": "Eye-catching first frame with clear subject, text overlay, high contrast determines video play rate.",
+    "best_practice": "Show faces with emotion, use bold text overlay, create curiosity gap, maintain brand consistency.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn", "YouTube"],
+    "examples": "Optimized thumbnails increase play rate by 70%",
+    "metrics": "+70% video play rate"
+  },
+  {
+    "id": "emotional_color_coding",
+    "title": "Emotional Color Associations",
+    "category": "color",
+    "description": "Red: excitement/danger, Blue: trust/calm, Green: nature/go, Yellow: caution/optimism, Black: luxury/power, Purple: creativity.",
+    "best_practice": "Match colors to desired emotion. Financial = blue/green, Food = red/yellow, Luxury = black/gold, Eco = green/brown.",
+    "platforms": ["Instagram", "Pinterest", "Facebook"],
+    "examples": "Emotionally aligned colors increase message retention by 40%",
+    "metrics": "+40% message retention"
+  },
+  {
+    "id": "minimalism_trend",
+    "title": "Modern Minimalist Design",
+    "category": "trend",
+    "description": "Clean layouts, ample white space, simple color palettes, bold typography, focused messaging.",
+    "best_practice": "Remove non-essential elements, use 2-3 colors maximum, large typography, single focal point.",
+    "platforms": ["Instagram", "Pinterest", "LinkedIn"],
+    "examples": "Minimalist designs rated 50% more modern and trustworthy",
+    "metrics": "+50% modern perception, +35% trust"
+  },
+  {
+    "id": "accessibility_alt_text",
+    "title": "Alt Text & Image Descriptions",
+    "category": "accessibility",
+    "description": "Descriptive alternative text for images helps screen readers and improves SEO.",
+    "best_practice": "Describe what's in image (objects, people, text), explain context, keep under 125 characters, avoid 'image of'.",
+    "platforms": ["Instagram", "Facebook", "LinkedIn", "Twitter"],
+    "examples": "Proper alt text increases reach to 15% more users",
+    "metrics": "+15% audience reach"
+  },
+  {
+    "id": "storytelling_sequences",
+    "title": "Visual Storytelling in Carousels",
+    "category": "ux",
+    "description": "Multi-image posts that tell a story or build anticipation increase swipe-through rates.",
+    "best_practice": "Start with hook, build narrative, end with payoff/CTA. Use consistent design theme. Create curiosity gaps.",
+    "platforms": ["Instagram", "LinkedIn", "Facebook"],
+    "examples": "Story-driven carousels get 2.1x more swipes",
+    "metrics": "+110% swipe-through rate"
+  },
+  {
+    "id": "gradient_modern_style",
+    "title": "Modern Gradient Usage",
+    "category": "trend",
+    "description": "Smooth color transitions, duotones, gradient overlays on photos create contemporary aesthetic.",
+    "best_practice": "Use subtle gradients (2-3 colors), overlay at 30-50% opacity, ensure text contrast maintained.",
+    "platforms": ["Instagram", "Pinterest", "Facebook"],
+    "examples": "Gradient overlays increase perceived modernity by 45%",
+    "metrics": "+45% modern/trendy perception"
+  },
+  {
+    "id": "infographic_data_viz",
+    "title": "Data Visualization & Infographics",
+    "category": "content",
+    "description": "Charts, graphs, icons, and visual data representations make complex information digestible.",
+    "best_practice": "Use bar charts for comparisons, line for trends, pie for proportions. Keep simple, label clearly.",
+    "platforms": ["LinkedIn", "Twitter", "Pinterest"],
+    "examples": "Infographics generate 3x more engagement than text posts",
+    "metrics": "+200% engagement, +94% shareability"
+  },
+  {
+    "id": "authentic_ugc_style",
+    "title": "User-Generated Content Aesthetic",
+    "category": "trend",
+    "description": "Authentic, unpolished, real-person photos build trust more than stock photography.",
+    "best_practice": "Use real customer photos, show behind-scenes, avoid overly staged shots, include imperfections.",
+    "platforms": ["Instagram", "Facebook", "TikTok"],
+    "examples": "UGC-style content shows 85% higher trust and 28% higher engagement",
+    "metrics": "+85% trust, +28% engagement"
+  },
+  {
+    "id": "motion_micro_animations",
+    "title": "Subtle Motion & Micro-interactions",
+    "category": "trend",
+    "description": "Small animations, parallax effects, hover states, loading animations enhance user experience.",
+    "best_practice": "Keep animations under 300ms, use easing functions, provide visual feedback for interactions.",
+    "platforms": ["Web", "Instagram Stories", "Facebook"],
+    "examples": "Micro-animations increase perceived quality by 60%",
+    "metrics": "+60% perceived quality"
+  }
+]
