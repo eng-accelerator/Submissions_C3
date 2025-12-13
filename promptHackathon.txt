@@ -1,0 +1,64 @@
+Please write up a top class code for me , i am using visual studio and i have python 3.12 on my machine and i want to do this project for my top rated professional experience - You being several years of experience in this field and expert in writing coding and writing code and showing great and simple way of presenting and creating the UI for these summits - My self having a knowledge like 5 year old - you please give me a code that i run one click for the below project that it should install all the dependencies and run end to end with out hiccups , should be clean run with one clcik with the code you will give it me. As you are the top experienced person in related to this project in coding and giving one click code - i want to use this for my best experience and please do the 10 out of 10 job for me - i should not see or get any errors when ran - it shall run smooth for below project-please analyze all before you me the code.--Multimodal AI Design Analysis Suite
+What it demonstrates:
+An app that lets users upload product/app designs.
+Create multiple agents like
+visual analysis agent
+UX critique agent
+market research agent.
+And 
+.
+It shall work in Multi-Agent System with LangGraph - Created an orchestrator with 4 agents:
+Task Classifier (determines what type of task it is)
+Code Generator (creates the code)
+Code Reviewer (validates and approves/rejects code)
+File Manager (saves approved code to files)
+
+Creative & Design Agents
+Brand Consistency Agent — checks alignment with brand guidelines, colors, fonts, and tone.
+Aesthetic Quality Agent — scores visual appeal, balance, and modernity of design.
+
+🧑‍💻 Usability & Interaction Agents
+Performance Agent — predicts load times, responsiveness, and mobile optimization issues.
+📊 Business & Market Agents
+
+Conversion Optimization Agent — analyzes CTAs, layout, and funnel effectiveness.
+Monetization Agent — evaluates ad placement, subscription flows, or in‑app purchase UX.
+
+🔒 Security & Compliance Agents
+Privacy & Security Agent — checks for data collection transparency and secure design patterns.
+Ethical Design Agent — flags dark patterns or manipulative UX choices.
+
+🤖 AI/Automation Agents
+Trend Analysis Agent — maps design choices against current UI/UX trends.
+
+Attached is my code but use the same design and color patterns as provided in attachments for good refrence.
+Also, please only code for agents provided in the promt and do not include all the agnets provided in the attached code you gave me earlier.
+
+also - please make it efficient when i upload the file or click the "Initiate Nueral Scan" button - i need some kind of progress showing for user that action is taken once uploaded or once clicked. also some fonts are grey whith dark background - bake the font color little visible but ot should be futuristic again.
+one more change is - I want the analysys results display to show in full page not just half page.
+
+
+all good but can you make my UI so futuristic.attached are some good examples.please give me wordclass sleek futursitic UI Design interface and the reports should be killer 10/out of 10 workd class reports and shall give creative dashboards.
+
+all good but can you update my UI so futuristic.attached are some good examples.please give me wordclass sleek futursitic UI Design interface and the reports should be killer 10/out of 10 workd class reports and shall give creative dashboards.
+
+
+Please follow the below folder structure and give me the code in the following structure. 
+
+Hackathon/
+├── agents/          # Agent implementations
+├── graph/           # LangGraph workflow and state
+├── modules/         # Core modules (LLM factory, document processing, etc.)
+├── tools/           # Search and utility tools
+├── utils/           # Logging and utilities
+├── tests/           # Test scripts
+├── app.py           # Streamlit application
+├── config.py        # Configuration management
+└── requirements.txt # Dependencies
+
+
+
+
+---run this --
+
+--streamlit run design_analysis.py
