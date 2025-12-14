@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus: Browser Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animate {
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #d946ef 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.1em;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .mode-btn {
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .mode-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid #818cf8;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-animate"></div>
+
+    <div class="w-full max-w-5xl glass rounded-3xl p-10 relative overflow-hidden fade-in-up">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-12 fade-in-up delay-100">
+            <div>
+                <h1
+                    class="text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 tracking-tighter drop-shadow-sm">
+                    NEXUS AGENT
+                </h1>
+                <p class="text-indigo-200/70 mt-3 text-xl font-light tracking-wide">Autonomous Browser Intelligence
+                    Suite</p>
+            </div>
+            <div
+                class="px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm font-bold tracking-wider uppercase flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                System Online
+            </div>
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="grid grid-cols-4 gap-4 mb-12 fade-in-up delay-200">
+            <button onclick="setMode('research')" id="btn-research"
+                class="mode-btn active p-4 rounded-2xl border border-transparent text-center cursor-pointer group relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+                <div class="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">🔍</div>
+                <div class="font-bold text-lg text-white">Research</div>
+                <div class="text-xs text-indigo-200/60 mt-1 font-medium">Deep Search</div>
+            </button>
+            <button onclick="setMode('techcrunch')" id="btn-techcrunch"
+                class="mode-btn p-4 rounded-2xl border border-transparent text-center cursor-pointer group relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+                <div class="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">🤖</div>
+                <div class="font-bold text-lg text-white">TechCrunch</div>
+                <div class="text-xs text-indigo-200/60 mt-1 font-medium">Auto-Blog</div>
+            </button>
+            <button onclick="setMode('youtube')" id="btn-youtube"
+                class="mode-btn p-4 rounded-2xl border border-transparent text-center cursor-pointer group relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+                <div class="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">▶️</div>
+                <div class="font-bold text-lg text-white">Youtube DJ</div>
+                <div class="text-xs text-indigo-200/60 mt-1 font-medium">Play Video</div>
+            </button>
+            <button onclick="setMode('sauce')" id="btn-sauce"
+                class="mode-btn p-4 rounded-2xl border border-transparent text-center cursor-pointer group relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+                <div class="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">🔐</div>
+                <div class="font-bold text-lg text-white">Login Demo</div>
+                <div class="text-xs text-indigo-200/60 mt-1 font-medium">Sauce Test</div>
+            </button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="mb-12 flex space-x-6 fade-in-up delay-300" id="control-bar">
+            <!-- Input Container -->
+            <div id="input-section" class="flex-1 transition-all duration-500 ease-in-out flex flex-col justify-end">
+
+                <!-- Research/YouTube Input -->
+                <div id="default-input-group">
+                    <label class="block text-indigo-300 text-xs font-bold mb-3 ml-1 tracking-[0.2em] uppercase">Target
+                        Scope</label>
+                    <input type="text" id="topic-input" placeholder="e.g. The Future of Quantum Computing"
+                        class="w-full bg-slate-900/60 border border-indigo-500/20 rounded-2xl px-6 py-5 text-lg text-white focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-indigo-200/30">
+                </div>
+
+                <!-- Sauce Login Inputs -->
+                <div id="sauce-input-group" class="hidden space-y-4">
+                    <div>
+                        <label
+                            class="block text-indigo-300 text-xs font-bold mb-2 ml-1 tracking-[0.2em] uppercase">Target
+                            URL</label>
+                        <input type="text" id="sauce-url" value="https://www.saucedemo.com/"
+                            class="w-full bg-slate-900/60 border border-indigo-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 transition-all">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label
+                                class="block text-indigo-300 text-xs font-bold mb-2 ml-1 tracking-[0.2em] uppercase">Username</label>
+                            <input type="text" id="sauce-user" placeholder="standard_user"
+                                class="w-full bg-slate-900/60 border border-indigo-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-indigo-300 text-xs font-bold mb-2 ml-1 tracking-[0.2em] uppercase">Password</label>
+                            <input type="password" id="sauce-pass" placeholder="secret_sauce"
+                                class="w-full bg-slate-900/60 border border-indigo-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 transition-all">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Button Container -->
+            <div class="flex items-end transition-all duration-500 ease-in-out" id="btn-container">
+                <button onclick="runAgent()" id="generate-btn"
+                    class="btn-primary px-10 rounded-2xl font-bold flex items-center justify-center space-x-3 h-[72px] mb-[1px]">
+                    <span id="btn-text">INITIALIZE</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Console / Status -->
+        <div id="status-panel"
+            class="hidden glass-panel rounded-2xl p-6 mb-8 font-mono text-sm border-l-4 border-indigo-500 shadow-lg shadow-indigo-500/10 animate-fade-in">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-3 h-3 rounded-full bg-indigo-400 animate-ping"></div>
+                <span class="text-indigo-300 font-bold uppercase tracking-wider">Operational Status: ACTIVE</span>
+            </div>
+            <div id="logs" class="space-y-2 text-gray-400 max-h-48 overflow-y-auto leading-relaxed">
+                <p>> System ready. Awaiting inputs...</p>
+            </div>
+        </div>
+
+        <!-- Result Area -->
+        <div id="result-area" class="hidden opacity-0 transition-opacity duration-1000">
+            <div class="flex justify-between items-end mb-6">
+                <h3
+                    class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight">
+                    Mission Output</h3>
+                <div id="file-links" class="flex space-x-2">
+                    <!-- Links injected here -->
+                </div>
+            </div>
+            <div
+                class="glass-panel rounded-2xl p-8 bg-slate-900/40 max-h-[500px] overflow-y-auto border border-indigo-500/20">
+                <div id="blog-content" class="prose prose-invert prose-lg max-w-none text-gray-300">
+                    <!-- Content injected here -->
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let currentMode = 'research';
+
+            function setMode(mode) {
+                currentMode = mode;
+                const btnRes = document.getElementById('btn-research');
+                const btnTc = document.getElementById('btn-techcrunch');
+                const btnYt = document.getElementById('btn-youtube');
+                const btnSauce = document.getElementById('btn-sauce');
+
+                const inputSec = document.getElementById('input-section');
+                const defaultGroup = document.getElementById('default-input-group');
+                const sauceGroup = document.getElementById('sauce-input-group');
+
+                const input = document.getElementById('topic-input');
+                const label = defaultGroup.querySelector('label');
+
+                const btnGenerate = document.getElementById('generate-btn');
+                const btnText = document.getElementById('btn-text');
+                const btnContainer = document.getElementById('btn-container');
+
+                // Reset all styles
+                [btnRes, btnTc, btnYt, btnSauce].forEach(btn => {
+                    if (btn) btn.classList.remove('active');
+                });
+
+                // Activate current
+                const activeBtn = mode === 'research' ? btnRes :
+                    (mode === 'techcrunch' ? btnTc :
+                        (mode === 'youtube' ? btnYt : btnSauce));
+                activeBtn.classList.add('active');
+
+                // Logic for Input/Button
+                if (mode === 'techcrunch') {
+                    // HIDE Input
+                    inputSec.classList.add('hidden');
+                    setTimeout(() => inputSec.style.opacity = '0', 0);
+
+                    // Button
+                    btnText.innerText = "START AUTO-PILOT";
+                    btnContainer.classList.add('w-full', 'justify-center');
+                    btnGenerate.classList.add('w-full', 'text-xl');
+
+                } else {
+                    // SHOW Input
+                    inputSec.classList.remove('hidden');
+                    setTimeout(() => inputSec.style.opacity = '1', 10);
+
+                    // Reset Button (Normal Size)
+                    btnContainer.classList.remove('w-full', 'justify-center');
+                    btnGenerate.classList.remove('w-full', 'text-xl');
+
+                    // Input Group Logic
+                    if (mode === 'sauce') {
+                        defaultGroup.classList.add('hidden');
+                        sauceGroup.classList.remove('hidden');
+                        btnText.innerText = "START LOGIN TEST";
+                    } else {
+                        defaultGroup.classList.remove('hidden');
+                        sauceGroup.classList.add('hidden');
+
+                        if (mode === 'research') {
+                            label.innerText = "RESEARCH TOPIC";
+                            input.placeholder = "e.g. The Future of Quantum Computing";
+                            btnText.innerText = "INITIALIZE";
+                        } else if (mode === 'youtube') {
+                            label.innerText = "MEDIA QUERY";
+                            input.placeholder = "e.g. Lofi Hip Hop Radio";
+                            btnText.innerText = "PLAY MEDIA";
+                        }
+                    }
+                }
+            }
+
+            async function runAgent() {
+                const topic = document.getElementById('topic-input').value;
+                const logs = document.getElementById('logs');
+                const statusPanel = document.getElementById('status-panel');
+                const resultArea = document.getElementById('result-area');
+                const contentDiv = document.getElementById('blog-content');
+
+                // Validation
+                if ((currentMode === 'research' || currentMode === 'youtube') && !topic) {
+                    alert("Please enter a topic.");
+                    return;
+                }
+
+                let sauceData = {};
+                if (currentMode === 'sauce') {
+                    const user = document.getElementById('sauce-user').value || 'standard_user';
+                    const pass = document.getElementById('sauce-pass').value || 'secret_sauce';
+                    const url = document.getElementById('sauce-url').value;
+                    sauceData = { username: user, password: pass, url: url };
+                }
+
+                // Reset UI
+                statusPanel.classList.remove('hidden');
+                resultArea.classList.add('hidden', 'opacity-0');
+                logs.innerHTML = '<p>> Sends link to orbital command...</p>';
+
+                const addLog = (msg) => {
+                    const p = document.createElement('p');
+                    p.innerHTML = `> ${msg}`;
+                    p.className = "border-l-2 border-indigo-500/30 pl-3 animate-pulse";
+                    logs.appendChild(p);
+                    logs.scrollTop = logs.scrollHeight;
+                    // Remove animation after a bit
+                    setTimeout(() => p.classList.remove('animate-pulse'), 1000);
+                }
+
+                setTimeout(() => addLog("Workflow initiated..."), 500);
+
+                setTimeout(() => {
+                    if (currentMode === 'youtube') addLog("YouTube Agent: Searching for video...");
+                    else if (currentMode === 'research') addLog("Research Agent: Engaging Tavily search...");
+                    else if (currentMode === 'sauce') addLog(`Auth Agent: Targeting ${sauceData.url}...`);
+                    else addLog("Navigator: Launching headless browser...");
+                }, 1500);
+
+                setTimeout(() => addLog("Agents coordinating..."), 3500);
+
+                try {
+                    let response;
+                    if (currentMode === 'research') {
+                        response = await fetch('/api/research', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ topic: topic })
+                        });
+                    } else if (currentMode === 'youtube') {
+                        response = await fetch('/api/youtube', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ topic: topic })
+                        });
+                    } else if (currentMode === 'sauce') {
+                        response = await fetch('/api/login-demo', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(sauceData)
+                        });
+                    } else {
+                        response = await fetch('/api/auto-crunch', { method: 'POST' });
+                    }
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        addLog("Job complete! Processing output...");
+
+                        // Display Result
+                        setTimeout(() => {
+                            contentDiv.innerHTML = data.content ? data.content.replace(/\n/g, '<br>') : "Operation Successful";
+                            resultArea.classList.remove('hidden');
+                            setTimeout(() => resultArea.classList.remove('opacity-0'), 100);
+
+                            const fileLinks = document.getElementById('file-links');
+                            if (currentMode === 'sauce') {
+                                fileLinks.innerHTML = '<span class="text-xs font-bold text-indigo-400 border border-indigo-500/30 px-3 py-1 rounded-full bg-indigo-500/10 flex items-center gap-1"><span class="text-xl">🔐</span> AUTH VERIFIED</span>';
+                            } else {
+                                fileLinks.innerHTML = '<span class="text-xs font-bold text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10 flex items-center gap-1"><span class="text-xl">✓</span> SAVED</span>';
+                            }
+                        }, 500);
+                    } else {
+                        addLog("Error: " + JSON.stringify(data));
+                    }
+
+                } catch (e) {
+                    addLog("CRITICAL ERROR: " + e.message);
+                }
+            }
+        </script>
+</body>
+
+</html>

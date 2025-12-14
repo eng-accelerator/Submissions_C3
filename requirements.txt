@@ -1,0 +1,11 @@
+langchain
+langgraph
+langchain-openai
+langchain-community
+playwright
+beautifulsoup4
+python-docx
+python-dotenv
+fastapi
+uvicorn
+tavily-python
