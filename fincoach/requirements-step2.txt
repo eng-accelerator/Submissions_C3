@@ -1,0 +1,54 @@
+# AI Financial Coach - Requirements (Step 2: Document Processing & RAG)
+
+# Core Framework
+streamlit
+sqlalchemy
+python-dotenv
+bcrypt
+pandas
+plotly
+openpyxl
+pydantic
+pydantic-settings
+
+# PostgreSQL Driver
+psycopg[binary]
+
+# Document Processing
+PyPDF2==3.0.1
+pdfplumber==0.10.3
+python-docx==1.1.0
+pillow==10.2.0
+pytesseract==0.3.10
+openpyxl==3.1.2
+
+# LangChain & RAG
+langchain==0.1.10
+langchain-openai==0.0.5
+langchain-community==0.0.25
+chromadb==0.4.22
+tiktoken==0.5.2
+
+# Text Processing
+unstructured==0.12.0
+markdown==3.5.2
+
+# OpenAI
+openai==1.12.0
+
+
+
+streamlit==1.31.0
+sqlalchemy==2.0.25
+psycopg[binary]>=3.1
+python-dotenv==1.0.0
+bcrypt==4.1.2
+langchain==0.1.10
+langchain-openai==0.0.5
+langchain-community==0.0.25
+pandas==2.2.0
+plotly==5.18.0
+openpyxl==3.1.2
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
