@@ -1,0 +1,91 @@
+Collecting langchain>=0.3.0
+  Using cached langchain-1.1.3-py3-none-any.whl.metadata (4.9 kB)
+Requirement already satisfied: langchain-core>=0.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (1.1.3)
+Requirement already satisfied: langchain-community>=0.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (0.4.1)
+Collecting langchain-groq>=0.3.0
+  Using cached langchain_groq-1.1.0-py3-none-any.whl.metadata (2.4 kB)
+Requirement already satisfied: langchain-openai>=0.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (1.1.2)
+Requirement already satisfied: langgraph in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (1.0.4)
+Requirement already satisfied: pydantic<3.0.0,>=2.7.4 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain>=0.3.0) (2.12.5)
+Requirement already satisfied: jsonpatch<2.0.0,>=1.33.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (1.33)
+Requirement already satisfied: langsmith<1.0.0,>=0.3.45 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (0.4.59)
+Requirement already satisfied: packaging<26.0.0,>=23.2.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (23.2)
+Requirement already satisfied: pyyaml<7.0.0,>=5.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (6.0.3)
+Requirement already satisfied: tenacity!=8.4.0,<10.0.0,>=8.1.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (8.5.0)
+Requirement already satisfied: typing-extensions<5.0.0,>=4.7.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (4.15.0)
+Requirement already satisfied: uuid-utils<1.0,>=0.12.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-core>=0.3.0) (0.12.0)
+Requirement already satisfied: langgraph-checkpoint<4.0.0,>=2.1.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph) (3.0.1)
+Requirement already satisfied: langgraph-prebuilt<1.1.0,>=1.0.2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph) (1.0.5)
+Requirement already satisfied: langgraph-sdk<0.3.0,>=0.2.2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph) (0.2.15)
+Requirement already satisfied: xxhash>=3.5.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph) (3.6.0)
+Requirement already satisfied: jsonpointer>=1.9 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from jsonpatch<2.0.0,>=1.33.0->langchain-core>=0.3.0) (3.0.0)
+Requirement already satisfied: ormsgpack>=1.12.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph-checkpoint<4.0.0,>=2.1.0->langgraph) (1.12.0)
+Requirement already satisfied: httpx>=0.25.2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph-sdk<0.3.0,>=0.2.2->langgraph) (0.28.1)
+Requirement already satisfied: orjson>=3.10.1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langgraph-sdk<0.3.0,>=0.2.2->langgraph) (3.11.5)
+Requirement already satisfied: requests-toolbelt>=1.0.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langsmith<1.0.0,>=0.3.45->langchain-core>=0.3.0) (1.0.0)
+Requirement already satisfied: requests>=2.0.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langsmith<1.0.0,>=0.3.45->langchain-core>=0.3.0) (2.32.5)
+Requirement already satisfied: zstandard>=0.23.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langsmith<1.0.0,>=0.3.45->langchain-core>=0.3.0) (0.25.0)
+Requirement already satisfied: anyio in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from httpx>=0.25.2->langgraph-sdk<0.3.0,>=0.2.2->langgraph) (4.12.0)
+Requirement already satisfied: certifi in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from httpx>=0.25.2->langgraph-sdk<0.3.0,>=0.2.2->langgraph) (2025.11.12)
+Requirement already satisfied: httpcore==1.* in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from httpx>=0.25.2->langgraph-sdk<0.3.0,>=0.2.2->langgraph) (1.0.9)
+Requirement already satisfied: idna in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from httpx>=0.25.2->langgraph-sdk<0.3.0,>=0.2.2->langgraph) (3.11)
+Requirement already satisfied: h11>=0.16 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from httpcore==1.*->httpx>=0.25.2->langgraph-sdk<0.3.0,>=0.2.2->langgraph) (0.16.0)
+Requirement already satisfied: annotated-types>=0.6.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from pydantic<3.0.0,>=2.7.4->langchain>=0.3.0) (0.7.0)
+Requirement already satisfied: pydantic-core==2.41.5 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from pydantic<3.0.0,>=2.7.4->langchain>=0.3.0) (2.41.5)
+Requirement already satisfied: typing-inspection>=0.4.2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from pydantic<3.0.0,>=2.7.4->langchain>=0.3.0) (0.4.2)
+Requirement already satisfied: langchain-classic<2.0.0,>=1.0.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (1.0.0)
+Requirement already satisfied: SQLAlchemy<3.0.0,>=1.4.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (2.0.45)
+Requirement already satisfied: aiohttp<4.0.0,>=3.8.3 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (3.13.2)
+Requirement already satisfied: dataclasses-json<0.7.0,>=0.6.7 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (0.6.7)
+Requirement already satisfied: pydantic-settings<3.0.0,>=2.10.1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (2.12.0)
+Requirement already satisfied: httpx-sse<1.0.0,>=0.4.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (0.4.3)
+Requirement already satisfied: numpy>=1.26.2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-community>=0.3.0) (1.26.4)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (25.4.0)
+Requirement already satisfied: frozenlist>=1.1.1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (6.7.0)
+Requirement already satisfied: propcache>=0.2.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (0.4.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from aiohttp<4.0.0,>=3.8.3->langchain-community>=0.3.0) (1.22.0)
+Requirement already satisfied: marshmallow<4.0.0,>=3.18.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from dataclasses-json<0.7.0,>=0.6.7->langchain-community>=0.3.0) (3.26.1)
+Requirement already satisfied: typing-inspect<1,>=0.4.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from dataclasses-json<0.7.0,>=0.6.7->langchain-community>=0.3.0) (0.9.0)
+Collecting langchain-text-splitters<2.0.0,>=1.0.0 (from langchain-classic<2.0.0,>=1.0.0->langchain-community>=0.3.0)
+  Using cached langchain_text_splitters-1.0.0-py3-none-any.whl.metadata (2.6 kB)
+Requirement already satisfied: python-dotenv>=0.21.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from pydantic-settings<3.0.0,>=2.10.1->langchain-community>=0.3.0) (1.0.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from requests>=2.0.0->langsmith<1.0.0,>=0.3.45->langchain-core>=0.3.0) (3.4.4)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from requests>=2.0.0->langsmith<1.0.0,>=0.3.45->langchain-core>=0.3.0) (2.3.0)
+Requirement already satisfied: greenlet>=1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from SQLAlchemy<3.0.0,>=1.4.0->langchain-community>=0.3.0) (3.3.0)
+Requirement already satisfied: mypy-extensions>=0.3.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from typing-inspect<1,>=0.4.0->dataclasses-json<0.7.0,>=0.6.7->langchain-community>=0.3.0) (1.1.0)
+Collecting groq<1.0.0,>=0.30.0 (from langchain-groq>=0.3.0)
+  Using cached groq-0.37.1-py3-none-any.whl.metadata (16 kB)
+Requirement already satisfied: distro<2,>=1.7.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from groq<1.0.0,>=0.30.0->langchain-groq>=0.3.0) (1.9.0)
+Requirement already satisfied: sniffio in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from groq<1.0.0,>=0.30.0->langchain-groq>=0.3.0) (1.3.1)
+Requirement already satisfied: openai<3.0.0,>=1.109.1 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-openai>=0.3.0) (2.11.0)
+Requirement already satisfied: tiktoken<1.0.0,>=0.7.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from langchain-openai>=0.3.0) (0.12.0)
+Requirement already satisfied: jiter<1,>=0.10.0 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from openai<3.0.0,>=1.109.1->langchain-openai>=0.3.0) (0.12.0)
+Requirement already satisfied: tqdm>4 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from openai<3.0.0,>=1.109.1->langchain-openai>=0.3.0) (4.67.1)
+Requirement already satisfied: regex>=2022.1.18 in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from tiktoken<1.0.0,>=0.7.0->langchain-openai>=0.3.0) (2025.11.3)
+Requirement already satisfied: colorama in c:\poomagal\learning_and_course\aiep\practicals_ai\ai-researcher\aires\lib\site-packages (from tqdm>4->openai<3.0.0,>=1.109.1->langchain-openai>=0.3.0) (0.4.6)
+Using cached langchain-1.1.3-py3-none-any.whl (102 kB)
+Using cached langchain_text_splitters-1.0.0-py3-none-any.whl (33 kB)
+Using cached langchain_groq-1.1.0-py3-none-any.whl (19 kB)
+Using cached groq-0.37.1-py3-none-any.whl (137 kB)
+Installing collected packages: groq, langchain-text-splitters, langchain-groq, langchain
+  Attempting uninstall: groq
+    Found existing installation: groq 0.4.2
+    Uninstalling groq-0.4.2:
+      Successfully uninstalled groq-0.4.2
+  Attempting uninstall: langchain-text-splitters
+    Found existing installation: langchain-text-splitters 0.2.4
+    Uninstalling langchain-text-splitters-0.2.4:
+      Successfully uninstalled langchain-text-splitters-0.2.4
+  Attempting uninstall: langchain-groq
+    Found existing installation: langchain-groq 0.1.3
+    Uninstalling langchain-groq-0.1.3:
+      Successfully uninstalled langchain-groq-0.1.3
+  Attempting uninstall: langchain
+    Found existing installation: langchain 0.2.17
+    Uninstalling langchain-0.2.17:
+      Successfully uninstalled langchain-0.2.17
+
+Successfully installed groq-0.37.1 langchain-1.1.3 langchain-groq-1.1.0 langchain-text-splitters-1.0.0
