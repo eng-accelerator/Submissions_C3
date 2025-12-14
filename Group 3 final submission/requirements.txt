@@ -1,0 +1,239 @@
+# AI Financial Coach - Python Dependencies
+# Project: Multi-Agent Financial Advisory System
+# Author: Dr. Nitin
+# Location: Pune, India
+
+# ============================================================================
+# CORE FRAMEWORK
+# ============================================================================
+streamlit==1.40.0                  # Web application framework
+python-dotenv==1.0.1               # Environment variable management
+
+# ============================================================================
+# DATABASE & ORM
+# ============================================================================
+sqlalchemy==2.0.35                 # SQL toolkit and ORM
+psycopg2-binary==2.9.10            # PostgreSQL adapter
+alembic==1.14.0                    # Database migration tool
+
+# ============================================================================
+# AUTHENTICATION & SECURITY
+# ============================================================================
+bcrypt==4.2.1                      # Password hashing
+pyjwt==2.10.1                      # JSON Web Tokens
+
+# ============================================================================
+# AI & LLM FRAMEWORKS
+# ============================================================================
+langchain==0.3.13                  # LLM application framework
+langchain-core==0.3.28             # LangChain core functionality
+langchain-community==0.3.13        # LangChain community integrations
+langchain-openai==0.2.14           # OpenAI integration for LangChain
+langgraph==0.2.60                  # Graph-based agent orchestration
+
+# ============================================================================
+# OPENAI & EMBEDDINGS
+# ============================================================================
+openai==1.58.1                     # OpenAI API client
+tiktoken==0.8.0                    # Token counting for OpenAI models
+
+# ============================================================================
+# VECTOR DATABASE
+# ============================================================================
+chromadb==0.5.23                   # Vector database for embeddings
+sentence-transformers==3.3.1       # Sentence embeddings
+
+# ============================================================================
+# DOCUMENT PROCESSING
+# ============================================================================
+PyPDF2==3.0.1                      # PDF file processing
+pdfplumber==0.11.4                 # Advanced PDF parsing
+pypdf==5.1.0                       # Modern PDF library
+python-docx==1.1.2                 # Word document processing
+openpyxl==3.1.5                    # Excel file processing
+xlrd==2.0.1                        # Excel file reading
+python-pptx==1.0.2                 # PowerPoint processing
+Pillow==11.0.0                     # Image processing
+unstructured==0.18.21              # Unstructured document parsing
+unstructured-client==0.42.4        # Unstructured API client
+
+# ============================================================================
+# DATA PROCESSING & ANALYSIS
+# ============================================================================
+pandas==2.2.3                      # Data manipulation and analysis
+numpy==2.2.0                       # Numerical computing
+scipy==1.15.1                      # Scientific computing
+
+# ============================================================================
+# VISUALIZATION
+# ============================================================================
+plotly==5.24.1                     # Interactive visualizations
+matplotlib==3.10.0                 # Static visualizations
+altair==6.0.0                      # Declarative visualization
+
+# ============================================================================
+# HTTP & API CLIENTS
+# ============================================================================
+requests==2.32.3                   # HTTP library
+httpx==0.28.1                      # Modern HTTP client
+aiohttp==3.13.2                    # Async HTTP client
+urllib3==2.3.0                     # HTTP client utilities
+
+# ============================================================================
+# VALIDATION & SERIALIZATION
+# ============================================================================
+pydantic==2.10.4                   # Data validation
+pydantic-settings==2.7.1           # Settings management
+pydantic-core==2.27.2              # Pydantic core functionality
+marshmallow==3.24.1                # Object serialization
+
+# ============================================================================
+# UTILITIES
+# ============================================================================
+python-dateutil==2.9.0.post0       # Date utilities
+pytz==2024.2                       # Timezone support
+regex==2024.11.6                   # Regular expressions
+beautifulsoup4==4.14.3             # HTML/XML parsing
+lxml==5.3.0                        # XML processing
+tqdm==4.67.1                       # Progress bars
+tenacity==9.0.0                    # Retry library
+backoff==2.2.1                     # Exponential backoff
+
+# ============================================================================
+# FILE HANDLING
+# ============================================================================
+watchdog==6.0.0                    # File system monitoring
+aiofiles==25.1.0                   # Async file operations
+fsspec==2024.12.0                  # File system abstraction
+
+# ============================================================================
+# CACHING & OPTIMIZATION
+# ============================================================================
+cachetools==6.2.2                  # Caching utilities
+joblib==1.4.2                      # Disk caching and parallel execution
+
+# ============================================================================
+# WEB SCRAPING & EXTRACTION
+# ============================================================================
+html5lib==1.1                      # HTML parser
+charset-normalizer==3.4.4          # Character encoding detection
+
+# ============================================================================
+# ASYNC & CONCURRENCY
+# ============================================================================
+anyio==4.12.0                      # Async I/O framework
+asyncio==3.4.3                     # Asynchronous programming
+greenlet==3.1.1                    # Lightweight coroutines
+
+# ============================================================================
+# MACHINE LEARNING (Optional - for advanced features)
+# ============================================================================
+scikit-learn==1.6.1                # Machine learning library
+transformers==4.57.3               # Hugging Face transformers
+
+# ============================================================================
+# NATURAL LANGUAGE PROCESSING
+# ============================================================================
+nltk==3.9.1                        # Natural language toolkit
+spacy==3.8.3                       # Industrial-strength NLP
+
+# ============================================================================
+# LOGGING & MONITORING
+# ============================================================================
+colorama==0.4.6                    # Colored terminal output
+rich==13.9.4                       # Rich text formatting
+
+# ============================================================================
+# JSON & YAML
+# ============================================================================
+jsonschema==4.23.0                 # JSON schema validation
+PyYAML==6.0.2                      # YAML parser
+ruamel.yaml==0.18.9                # Advanced YAML processing
+
+# ============================================================================
+# CRYPTOGRAPHY & ENCODING
+# ============================================================================
+cryptography==44.0.0               # Cryptographic recipes
+cffi==2.0.0                        # Foreign function interface
+
+# ============================================================================
+# TESTING & DEVELOPMENT (Optional)
+# ============================================================================
+pytest==8.3.4                      # Testing framework
+pytest-asyncio==0.25.2             # Async testing
+pytest-cov==6.0.0                  # Code coverage
+black==24.11.0                     # Code formatting
+flake8==7.1.1                      # Linting
+mypy==1.14.1                       # Static type checking
+
+# ============================================================================
+# API & WEB FRAMEWORK DEPENDENCIES
+# ============================================================================
+fastapi==0.115.6                   # Modern API framework (if needed)
+uvicorn==0.38.0                    # ASGI server (if needed)
+starlette==0.41.3                  # ASGI framework
+websockets==15.0.1                 # WebSocket support
+
+# ============================================================================
+# SPECIFIC LANGCHAIN DEPENDENCIES
+# ============================================================================
+langsmith==0.2.8                   # LangChain monitoring
+dataclasses-json==0.6.7            # JSON dataclasses
+typing-inspect==0.9.0              # Runtime type inspection
+typing-extensions==4.15.0          # Typing extensions
+
+# ============================================================================
+# VECTOR STORE DEPENDENCIES
+# ============================================================================
+hnswlib==0.8.0                     # Fast approximate nearest neighbors
+faiss-cpu==1.9.0.post1             # Facebook AI Similarity Search (optional)
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# Installation Instructions:
+# 1. Create virtual environment: python -m venv venv
+# 2. Activate virtual environment:
+#    - Windows: venv\Scripts\activate
+#    - Linux/Mac: source venv/bin/activate
+# 3. Install dependencies: pip install -r requirements.txt
+#
+# Alternative Installation (faster):
+# pip install --upgrade pip
+# pip install -r requirements.txt --no-cache-dir
+#
+# For development:
+# pip install -r requirements.txt -e .
+#
+# System Requirements:
+# - Python 3.9 or higher
+# - PostgreSQL 12 or higher
+# - Minimum 4GB RAM
+# - Minimum 2GB disk space for dependencies
+#
+# Optional Dependencies:
+# - For GPU support: pip install faiss-gpu (instead of faiss-cpu)
+# - For advanced NLP: python -m spacy download en_core_web_sm
+# - For NLTK data: python -m nltk.downloader all
+#
+# Environment Variables Required (create .env file):
+# - DATABASE_URL=postgresql+psycopg2://user:pass@host:port/dbname
+# - OPENROUTER_API_KEY=your_openrouter_key
+# - OPENAI_API_KEY=your_openai_key
+# - SECRET_KEY=your_secret_key
+#
+# Platform-Specific Notes:
+# - Windows: Some packages may require Visual C++ Build Tools
+# - Mac M1/M2: Use architecture-specific builds where needed
+# - Linux: May need additional system packages (libpq-dev, python3-dev)
+#
+# Troubleshooting:
+# - If psycopg2 fails, try: pip install psycopg2-binary
+# - If lxml fails on Windows, download prebuilt wheel from unofficial binaries
+# - Clear pip cache if needed: pip cache purge
+#
+# Version Compatibility:
+# This requirements file is tested with Python 3.9, 3.10, 3.11, and 3.12
+# Some packages may have newer versions - test before upgrading in production
+#
+# ============================================================================
