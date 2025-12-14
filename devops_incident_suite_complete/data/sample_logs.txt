@@ -1,0 +1,55 @@
+2025-12-14T10:15:02.113Z INFO  agent.controller     request_id=REQ-10231 msg="Incoming request received" user_id=U-291 service=api-gateway
+
+2025-12-14T10:15:02.219Z INFO  system.metrics       cpu_usage=42% mem_usage=58% load_avg=1.21 msg="System metrics collected"
+
+2025-12-14T10:15:03.004Z WARN  system.metrics       cpu_usage=81% mem_usage=62% load_avg=3.84 msg="High CPU usage detected"
+
+2025-12-14T10:15:03.311Z INFO  agent.reasoner       request_id=REQ-10231 msg="Reasoning step started" model=gpt-4.1
+
+2025-12-14T10:15:04.129Z ERROR db.postgres         request_id=REQ-10231 error_code=08006 
+msg="Connection to database failed" 
+details="could not connect to server: Connection refused"
+
+2025-12-14T10:15:04.132Z WARN  agent.memory         msg="Short-term memory write failed" retry_count=1
+
+2025-12-14T10:15:05.019Z ERROR agent.tool_executor request_id=REQ-10231 tool=fetch_user_profile 
+msg="Tool execution failed due to upstream DB error"
+
+2025-12-14T10:15:06.088Z WARN  system.metrics       cpu_usage=88% mem_usage=71% load_avg=4.92 msg="CPU saturation approaching critical threshold"
+
+2025-12-14T10:15:07.441Z ERROR system.memory       mem_usage=92% available_mb=318 
+msg="Memory pressure detected, nearing OOM condition"
+
+2025-12-14T10:15:07.443Z INFO  system.gc            msg="Garbage collection triggered" gc_type=major
+
+2025-12-14T10:15:08.117Z ERROR application.api     request_id=REQ-10232 status=500 
+msg="Unhandled exception in request handler" 
+exception="NullPointerException" 
+stacktrace="com.agent.api.Handler.process(Handler.java:87)"
+
+2025-12-14T10:15:08.891Z WARN  agent.validator     request_id=REQ-10232 
+msg="Response validation failed" reason="incomplete output"
+
+2025-12-14T10:15:09.302Z ERROR network.client      service=vector-db 
+msg="Timeout while calling external service" timeout_ms=3000
+
+2025-12-14T10:15:09.305Z INFO  agent.controller     msg="Retrying failed network call" attempt=2 max_attempts=3
+
+2025-12-14T10:15:10.114Z INFO  db.postgres          msg="Database connection re-established" latency_ms=87
+
+2025-12-14T10:15:10.487Z INFO  agent.memory         msg="Recovered short-term memory write" latency_ms=12
+
+2025-12-14T10:15:11.002Z INFO  system.metrics       cpu_usage=55% mem_usage=64% load_avg=2.01 msg="System stabilized after recovery"
+
+2025-12-14T10:15:11.419Z INFO  agent.reasoner       request_id=REQ-10231 msg="Reasoning step completed successfully"
+
+2025-12-14T10:15:12.006Z INFO  application.api     request_id=REQ-10231 status=200 
+msg="Request processed successfully" latency_ms=4893
+
+2025-12-14T10:15:12.812Z WARN  security.auth        user_id=U-992 
+msg="Multiple failed authentication attempts detected" count=5
+
+2025-12-14T10:15:13.101Z ERROR security.auth       user_id=U-992 
+msg="Account temporarily locked due to suspicious activity"
+
+2025-12-14T10:15:14.019Z INFO  agent.controller     msg="Background health check completed" status=healthy

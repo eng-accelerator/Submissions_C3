@@ -1,0 +1,29 @@
+# Core Framework
+streamlit==1.29.0
+langchain==0.1.0
+langgraph==0.0.20
+
+# OpenRouter/OpenAI
+openai==1.12.0
+requests==2.31.0
+
+# Vector Database (LanceDB instead of ChromaDB)
+lancedb==0.4.0
+pyarrow==14.0.0
+
+# Configuration & Environment
+python-dotenv==1.0.0
+pydantic==2.5.0
+
+# Data Processing
+pandas==2.1.0
+
+# Embeddings
+# Note: For Windows, install PyTorch CPU version first:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+# Then install sentence-transformers (version 5.2.0+ required for huggingface_hub compatibility)
+sentence-transformers>=5.2.0
+
+# Testing (optional)
+pytest==7.4.0
+pytest-asyncio==0.21.0
