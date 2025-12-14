@@ -1,0 +1,28 @@
+# Authentication Log - Contains login attempts and security events
+# Format: timestamp hostname service: message
+
+2025-12-13 10:00:01 server01 sshd[1234]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2
+2025-12-13 10:00:15 server01 sshd[1235]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:16 server01 sshd[1236]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:17 server01 sshd[1237]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:18 server01 sshd[1238]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:19 server01 sshd[1239]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:20 server01 sshd[1240]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:21 server01 sshd[1241]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+2025-12-13 10:00:22 server01 sshd[1242]: authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.100 user=admin
+2025-12-13 10:00:23 server01 sshd[1243]: invalid login attempt from 192.168.1.100
+2025-12-13 10:01:05 server01 sshd[1244]: Accepted password for user1 from 10.0.0.50 port 54323 ssh2
+2025-12-13 10:02:10 server01 sshd[1245]: Failed password for root from 203.0.113.50 port 54324 ssh2
+2025-12-13 10:02:11 server01 sshd[1246]: Failed password for root from 203.0.113.50 port 54324 ssh2
+2025-12-13 10:02:12 server01 sshd[1247]: Failed password for root from 203.0.113.50 port 54324 ssh2
+2025-12-13 10:03:20 server01 sshd[1248]: Accepted publickey for deploy from 10.0.0.10 port 54325 ssh2
+2025-12-13 10:04:15 server01 sudo: user1 : TTY=pts/0 ; PWD=/home/user1 ; USER=root ; COMMAND=/usr/bin/apt update
+2025-12-13 10:05:30 server01 sshd[1249]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+2025-12-13 10:05:31 server01 sshd[1250]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+2025-12-13 10:05:32 server01 sshd[1251]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+2025-12-13 10:05:33 server01 sshd[1252]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+2025-12-13 10:05:34 server01 sshd[1253]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+2025-12-13 10:06:00 server01 sshd[1254]: authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:07:10 server01 sshd[1255]: Accepted password for user2 from 10.0.0.20 port 54327 ssh2
+2025-12-13 10:08:05 server01 sshd[1256]: invalid login attempt from 192.0.2.100
+2025-12-13 10:09:15 server01 sshd[1257]: Failed password for user admin from 192.0.2.100 port 54328 ssh2

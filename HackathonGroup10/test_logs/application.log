@@ -1,0 +1,35 @@
+# Application Log - Contains application-level events and errors
+# Format: timestamp [level] message
+
+2025-12-13 10:00:01 [INFO] Application started successfully
+2025-12-13 10:00:15 [WARN] Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:16 [WARN] Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:17 [WARN] Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:18 [WARN] Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:19 [WARN] Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:20 [ERROR] SQL injection attempt detected: SELECT * FROM users WHERE id=1 OR 1=1--
+2025-12-13 10:00:21 [ERROR] SQL injection attempt detected: admin' UNION SELECT * FROM users--
+2025-12-13 10:00:22 [ERROR] XSS attempt detected: <script>alert('XSS')</script>
+2025-12-13 10:00:23 [ERROR] XSS attempt detected: javascript:alert('XSS')
+2025-12-13 10:00:24 [ERROR] Path traversal attempt: ../../etc/passwd
+2025-12-13 10:00:25 [ERROR] Path traversal attempt: ..\\..\\windows\\system32\\config\\sam
+2025-12-13 10:01:05 [INFO] User login successful: user1@example.com
+2025-12-13 10:02:10 [WARN] Invalid login attempt from 203.0.113.50
+2025-12-13 10:02:11 [WARN] Invalid login attempt from 203.0.113.50
+2025-12-13 10:02:12 [WARN] Invalid login attempt from 203.0.113.50
+2025-12-13 10:03:20 [INFO] Database connection established
+2025-12-13 10:04:15 [INFO] User action: /usr/bin/apt update executed by user1
+2025-12-13 10:05:30 [ERROR] Authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:05:31 [ERROR] Authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:05:32 [ERROR] Authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:05:33 [ERROR] Authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:05:34 [ERROR] Authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+2025-12-13 10:06:00 [INFO] API request processed: GET /api/v1/users
+2025-12-13 10:07:10 [INFO] User login successful: user2@example.com
+2025-12-13 10:08:05 [WARN] Invalid login attempt from 192.0.2.100
+2025-12-13 10:09:15 [ERROR] SQL injection attempt detected: '; DROP TABLE users;--
+2025-12-13 10:10:20 [INFO] Scheduled backup completed successfully
+2025-12-13 10:11:11 [INFO] Email sent successfully to user@example.com
+2025-12-13 10:12:12 [WARN] Rate limit exceeded for IP: 198.51.100.8
+2025-12-13 10:13:13 [INFO] Cache cleared successfully
+2025-12-13 10:14:14 [ERROR] XSS attempt detected: <img src=x onerror=alert(1)>

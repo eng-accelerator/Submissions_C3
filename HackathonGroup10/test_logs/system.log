@@ -1,0 +1,31 @@
+# System Log - Contains system-level events
+# Format: timestamp hostname service[pid]: message
+
+Dec 13 10:00:01 server01 systemd[1]: Started Daily security update check.
+Dec 13 10:00:15 server01 sshd[1235]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+Dec 13 10:00:16 server01 sshd[1236]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+Dec 13 10:00:17 server01 sshd[1237]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+Dec 13 10:00:18 server01 sshd[1238]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+Dec 13 10:00:19 server01 sshd[1239]: Failed password for user admin from 192.168.1.100 port 54322 ssh2
+Dec 13 10:00:20 server01 kernel: [123456.789] Firewall: Blocked connection from 192.168.1.100
+Dec 13 10:00:21 server01 sshd[1240]: authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.100 user=admin
+Dec 13 10:01:05 server01 systemd[1]: Started Apache web server.
+Dec 13 10:02:10 server01 sshd[1245]: Failed password for root from 203.0.113.50 port 54324 ssh2
+Dec 13 10:02:11 server01 sshd[1246]: Failed password for root from 203.0.113.50 port 54324 ssh2
+Dec 13 10:02:12 server01 sshd[1247]: Failed password for root from 203.0.113.50 port 54324 ssh2
+Dec 13 10:03:20 server01 systemd[1]: Started Database service.
+Dec 13 10:04:15 server01 sudo: user1 : TTY=pts/0 ; PWD=/home/user1 ; USER=root ; COMMAND=/usr/bin/apt update
+Dec 13 10:05:30 server01 sshd[1249]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+Dec 13 10:05:31 server01 sshd[1250]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+Dec 13 10:05:32 server01 sshd[1251]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+Dec 13 10:05:33 server01 sshd[1252]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+Dec 13 10:05:34 server01 sshd[1253]: Failed password for user admin from 198.51.100.25 port 54326 ssh2
+Dec 13 10:06:00 server01 kernel: [123500.123] Firewall: Blocked connection from 198.51.100.25
+Dec 13 10:07:10 server01 systemd[1]: Started Backup service.
+Dec 13 10:08:05 server01 sshd[1256]: invalid login attempt from 192.0.2.100
+Dec 13 10:09:15 server01 systemd[1]: Started Monitoring service.
+Dec 13 10:10:20 server01 systemd[1]: Stopped old service instance.
+Dec 13 10:11:11 server01 systemd[1]: Started Email service.
+Dec 13 10:12:12 server01 kernel: [123800.456] Firewall: Rate limit exceeded for 198.51.100.8
+Dec 13 10:13:13 server01 systemd[1]: Started Cache service.
+Dec 13 10:14:14 server01 systemd[1]: Started Log rotation service.

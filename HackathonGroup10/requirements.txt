@@ -1,0 +1,18 @@
+# Requirements for Hugging Face Spaces Deployment
+# This file is used by the Dockerfile
+
+# Core dependencies
+streamlit>=1.28.0
+langgraph>=0.0.40
+pandas>=2.0.0
+plotly>=5.17.0
+requests>=2.31.0  # For external API calls (NO RAG needed)
+
+# Optional: RAG features for CVE intelligence (uncomment if needed)
+# langchain>=0.1.0
+# faiss-cpu>=1.7.4
+# sentence-transformers>=2.2.0
+
+# Note: The agents package uses only Python standard library
+# No additional dependencies needed for the agent implementations
+# RAG features are optional and work with fallback if not installed

@@ -1,0 +1,21 @@
+{
+  "agents": {
+    "log_monitor": {
+      "buffer_size": 10000,
+      "analysis_interval_seconds": 5
+    },
+    "threat_intel": {
+      "update_interval_hours": 24
+    },
+    "vulnerability_scanner": {
+      "scan_depth": "comprehensive"
+    },
+    "incident_response": {
+      "auto_response_enabled": true
+    },
+    "policy_checker": {
+      "compliance_frameworks": ["ISO27001", "NIST_CSF"]
+    }
+  }
+}
+

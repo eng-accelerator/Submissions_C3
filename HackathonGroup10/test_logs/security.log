@@ -1,0 +1,36 @@
+# Security Log - Contains security-related events
+# Format: timestamp [SECURITY] event_type: message
+
+2025-12-13 10:00:01 [SECURITY] LOGIN_SUCCESS: User admin logged in from 10.0.0.5
+2025-12-13 10:00:15 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:16 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:17 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:18 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:19 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:20 [SECURITY] BRUTE_FORCE_DETECTED: Multiple failed login attempts from 192.168.1.100
+2025-12-13 10:00:21 [SECURITY] SQL_INJECTION: Detected SQL injection attempt: SELECT * FROM users WHERE id=1 OR 1=1--
+2025-12-13 10:00:22 [SECURITY] SQL_INJECTION: Detected SQL injection attempt: admin' UNION SELECT * FROM users--
+2025-12-13 10:00:23 [SECURITY] XSS_ATTEMPT: Detected XSS attempt: <script>alert('XSS')</script>
+2025-12-13 10:00:24 [SECURITY] XSS_ATTEMPT: Detected XSS attempt: javascript:alert('XSS')
+2025-12-13 10:00:25 [SECURITY] PATH_TRAVERSAL: Detected path traversal attempt: ../../etc/passwd
+2025-12-13 10:01:05 [SECURITY] LOGIN_SUCCESS: User user1 logged in from 10.0.0.50
+2025-12-13 10:02:10 [SECURITY] LOGIN_FAILURE: Failed password for root from 203.0.113.50
+2025-12-13 10:02:11 [SECURITY] LOGIN_FAILURE: Failed password for root from 203.0.113.50
+2025-12-13 10:02:12 [SECURITY] LOGIN_FAILURE: Failed password for root from 203.0.113.50
+2025-12-13 10:03:20 [SECURITY] PRIVILEGE_ESCALATION: User user1 executed sudo command
+2025-12-13 10:04:15 [SECURITY] ACCESS_DENIED: Access denied to /admin/config from 192.0.2.45
+2025-12-13 10:05:30 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:31 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:32 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:33 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:34 [SECURITY] LOGIN_FAILURE: Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:35 [SECURITY] BRUTE_FORCE_DETECTED: Multiple failed login attempts from 198.51.100.25
+2025-12-13 10:06:00 [SECURITY] RATE_LIMIT: Rate limit exceeded for IP 198.51.100.8
+2025-12-13 10:07:10 [SECURITY] LOGIN_SUCCESS: User user2 logged in from 10.0.0.20
+2025-12-13 10:08:05 [SECURITY] LOGIN_FAILURE: Invalid login attempt from 192.0.2.100
+2025-12-13 10:09:15 [SECURITY] SQL_INJECTION: Detected SQL injection attempt: '; DROP TABLE users;--
+2025-12-13 10:10:20 [SECURITY] FILE_ACCESS: Sensitive file access attempt: /etc/passwd
+2025-12-13 10:11:11 [SECURITY] API_ACCESS: API key validated for user@example.com
+2025-12-13 10:12:12 [SECURITY] RATE_LIMIT: Rate limit exceeded for IP 198.51.100.8
+2025-12-13 10:13:13 [SECURITY] CONFIG_CHANGE: Configuration updated by admin
+2025-12-13 10:14:14 [SECURITY] XSS_ATTEMPT: Detected XSS attempt: <img src=x onerror=alert(1)>

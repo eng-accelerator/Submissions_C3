@@ -1,0 +1,45 @@
+# Combined Test Log - All attack types in one file for comprehensive testing
+# This file contains examples of all attack patterns the system can detect
+
+# Brute Force Attacks
+2025-12-13 10:00:15 Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:16 Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:17 Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:18 Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:19 Failed password for user admin from 192.168.1.100
+2025-12-13 10:00:20 authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.100 user=admin
+2025-12-13 10:00:21 invalid login attempt from 192.168.1.100
+
+# SQL Injection Attacks
+2025-12-13 10:00:22 GET /login?user=admin' OR '1'='1 HTTP/1.1
+2025-12-13 10:00:23 GET /search?q=admin' UNION SELECT * FROM users-- HTTP/1.1
+2025-12-13 10:00:24 POST /api/login username=admin'; DROP TABLE users;--
+2025-12-13 10:00:25 SELECT * FROM users WHERE id=1 OR 1=1--
+2025-12-13 10:00:26 admin' UNION SELECT * FROM users--
+
+# XSS Attacks
+2025-12-13 10:00:27 GET /page?name=<script>alert('XSS')</script> HTTP/1.1
+2025-12-13 10:00:28 GET /search?q=<img src=x onerror=alert(1)> HTTP/1.1
+2025-12-13 10:00:29 GET /comment?text=javascript:alert('XSS') HTTP/1.1
+2025-12-13 10:00:30 <script>document.cookie="admin=true"</script>
+2025-12-13 10:00:31 onerror=alert('XSS')
+
+# Path Traversal Attacks
+2025-12-13 10:00:32 GET /../../etc/passwd HTTP/1.1
+2025-12-13 10:00:33 GET /files/../../../etc/passwd HTTP/1.1
+2025-12-13 10:00:34 GET /download?file=..\\..\\windows\\system32\\config\\sam HTTP/1.1
+2025-12-13 10:00:35 GET /../../etc/shadow HTTP/1.1
+
+# More Brute Force
+2025-12-13 10:05:30 Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:31 Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:32 Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:33 Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:34 Failed password for user admin from 198.51.100.25
+2025-12-13 10:05:35 authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.25 user=admin
+
+# Normal Traffic (should not trigger alerts)
+2025-12-13 10:10:01 User login successful: user1@example.com
+2025-12-13 10:10:02 GET / HTTP/1.1 200 4523
+2025-12-13 10:10:03 GET /assets/css/main.css HTTP/1.1 200 10234
+2025-12-13 10:10:04 API request processed: GET /api/v1/users
