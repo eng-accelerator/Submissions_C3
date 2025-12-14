@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI DevOps Incident Analyst - Architecture & Design</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            color: #2c3e50;
+        }
+        h2 {
+            margin-top: 40px;
+            color: #34495e;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 5px;
+        }
+        h3 {
+            margin-top: 30px;
+            color: #455a64;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        code {
+            background-color: #f6f8fa;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #f6f8fa;
+            padding: 16px;
+            overflow: auto;
+            border-radius: 6px;
+        }
+        pre code {
+            padding: 0;
+            background-color: transparent;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI DevOps Incident Analyst - Architecture & Design Document</h1>
+
+    <h2>1. Executive Summary</h2>
+    <p>The <strong>AI DevOps Incident Analyst</strong> is an intelligent automation platform designed to reduce Mean Time To Resolution (MTTR) for DevOps incidents. By leveraging Multi-Agent AI architecture, it autonomously parses logs, consults internal knowledge bases (Cookbooks), creates remediation plans, and executes operational workflows (JIRA ticketing, Slack notifications)..</p>
+
+    <h2>2. System Architecture</h2>
+
+    <h3>2.1 High-Level Architecture (C4 Context)</h3>
+    <p>The system acts as an orchestration layer between Operational Data (Logs), Knowledge (Cookbooks), AI Models (OpenRouter/LLMs), and Workflow Tools (JIRA, Slack).</p>
+    
+    <div class="mermaid">
+    graph TB
+        subgraph "User Layer"
+            User[DevOps Engineer]
+        end
+
+        subgraph "AI DevOps Analyst System"
+            UI[Streamlit UI]
+            Orchestrator[LangGraph Orchestrator]
+            
+            subgraph "Agent Layer"
+                LogAgent[Log Reader Agent]
+                RAGAgent[Cookbook RAG Agent]
+                FixAgent[Remediation Agent]
+                OpsAgent[JIRA/Slack Action Agents]
+            end
+            
+            subgraph "Data Layer"
+                VectorDB[(FAISS Vector Store)]
+            end
+        end
+
+        subgraph "External Services"
+            LLM[OpenRouter / LLM API]
+            JIRA[Atlassian JIRA]
+            Slack[Slack Webhook]
+            Web[DuckDuckGo Search]
+        end
+
+        User -->|Uploads Logs & Docs| UI
+        UI -->|Triggers Analysis| Orchestrator
+        Orchestrator --> LogAgent
+        LogAgent -->|Raw Text| LLM
+        LogAgent -->|Log Event| Orchestrator
+        
+        Orchestrator --> RAGAgent
+        RAGAgent -->|Query| VectorDB
+        VectorDB -->|Context| RAGAgent
+        
+        Orchestrator --> FixAgent
+        FixAgent -->|Context Missing?| Web
+        FixAgent -->|Plan| Orchestrator
+        
+        Orchestrator --> OpsAgent
+        OpsAgent -->|Create Ticket| JIRA
+        OpsAgent -->|Notify| Slack
+    </div>
+
+    <h3>2.2 Sequence Diagram (Agent Workflow)</h3>
+    <p>A detailed view of the synchronous execution flow managed by LangGraph.</p>
+
+    <div class="mermaid">
+    sequenceDiagram
+        participant U as User
+        participant App as Streamlit App
+        participant G as Graph Logic
+        participant LLM as OpenRouter LLM
+        participant RAG as Vector Store
+        participant EXT as JIRA/Slack
+
+        U->>App: Upload Log & Cookbook
+        U->>App: Click 'Start Analysis'
+        App->>App: Index Cookbook (FAISS)
+        App->>G: Invoke Graph (Log Content)
+        
+        rect rgb(240, 248, 255)
+            Note over G, LLM: Node 1: Log Analysis
+            G->>LLM: Parse Log & Extract Errors
+            LLM-->>G: Structured Error JSON
+        end
+        
+        rect rgb(255, 250, 245)
+            Note over G, RAG: Node 2: Context Retrieval
+            G->>RAG: Similarity Search (Error Summary)
+            RAG-->>G: Relevant Cookbook Chunks
+        end
+        
+        rect rgb(240, 255, 240)
+            Note over G, LLM: Node 3: Remediation Planning
+            alt No Cookbook Found
+                G->>G: DuckDuckGo Web Search
+            end
+            G->>LLM: Generate Fix (Input: Error + Context)
+            LLM-->>G: Markdown Table Plan
+        end
+        
+        rect rgb(255, 240, 245)
+            Note over G, EXT: Node 4: Action Execution
+            G->>EXT: Create JIRA Issue (Task)
+            EXT-->>G: Ticket Key (e.g., DEVOPS-123)
+            G->>EXT: Send Slack Notification
+            EXT-->>G: Status 200 OK
+        end
+        
+        G-->>App: Final State (Plan + Actions)
+        App-->>U: Display Dashboard
+    </div>
+
+    <h2>3. Component Design</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Technology</th>
+                <th>Responsibility</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Frontend</strong></td>
+                <td>Streamlit</td>
+                <td>Provides an interactive UI for file uploads and configuration. Handles session state and displays Markdown results.</td>
+            </tr>
+            <tr>
+                <td><strong>Orchestrator</strong></td>
+                <td>LangGraph</td>
+                <td>Manages the state machine (DAG) of the agents. Ensures data passes correctly from Log Reader -> Remediation -> Actions.</td>
+            </tr>
+            <tr>
+                <td><strong>Log Agent</strong></td>
+                <td>LangChain / LLM</td>
+                <td>Specialized prompt engineering to parse unstructured text logs into JSON format (Error Type, Timestamp, Severity).</td>
+            </tr>
+            <tr>
+                <td><strong>RAG Engine</strong></td>
+                <td>FAISS, HuggingFace</td>
+                <td>Local embedding generation (SentenceTransformers) and vector storage for fast retrieval of internal documentation.</td>
+            </tr>
+            <tr>
+                <td><strong>LLM Gateway</strong></td>
+                <td>Requests / Custom</td>
+                <td>A robust wrapper around OpenRouter API to handle token limits (truncation), JSON validation, and fail-safes.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. Production Readiness Guidelines</h2>
+    <p>To deploy this application in a production enterprise environment, the following steps are recommended:</p>
+
+    <h3>4.1 Security & Configuration</h3>
+    <ul>
+        <li><strong>Secrets Management:</strong> Move <code>config.yaml</code> to a secure Vault (e.g., AWS Secrets Manager, HashiCorp Vault) and inject as environment variables at runtime.</li>
+        <li><strong>Authentication:</strong> Add an auth layer (OIDC/SSO) in front of the Streamlit app using a reverse proxy (Nginx/OAuth2-Proxy) to restrict access to authorized DevOps personnel.</li>
+        <li><strong>Input Validation:</strong> Implement strict file type validation and virus scanning for uploaded logs/cookbooks.</li>
+    </ul>
+
+    <h3>4.2 Scalability & Infrastructure</h3>
+    <ul>
+        <li><strong>Containerization:</strong> Dockerize the application.</li>
+    </ul>
+    <pre><code>FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 8501
+CMD ["streamlit", "run", "app.py"]</code></pre>
+
+    <ul>
+        <li><strong>Vector Store:</strong> For large-scale knowledge bases, replace local FAISS with a persistent Vector Database like Pinecone, Weaviate, or pgvector.</li>
+        <li><strong>Async Processing:</strong> For extremely large logs, offload analysis to a Celery worker queue (Redis/RabbitMQ) and update the UI via WebSockets, preventing browser timeouts.</li>
+    </ul>
+
+    <h3>4.3 Monitoring & Observability</h3>
+    <ul>
+        <li><strong>Log Tracing:</strong> Integrate LangSmith or Ariel to trace LLM calls, costs, and latency.</li>
+        <li><strong>Application Metrics:</strong> Expose Prometheus metrics from the Python application (Request count, Error rate, JIRA API latency).</li>
+        <li><strong>Audit Trails:</strong> Log every remediation plan generated and JIRA ticket created to a centralized audit system (Splunk/ELK) for compliance.</li>
+    </ul>
+
+    <h2>5. Directory Structure (Final)</h2>
+    <pre><code>ai_devops_analyst/
+├── app.py                  # Main Application
+├── config.yaml             # External Config
+├── agents/                 # Agent Logic
+│   ├── log_reader.py
+│   ├── cookbook.py
+│   ├── remediation.py
+│   ├── jira_agent.py
+│   └── notification.py
+├── core/                   # Core Framework
+│   ├── graph.py            # LangGraph Definition
+│   ├── llm.py              # OpenRouter Client
+│   └── state.py            # State Schema
+└── requirements.txt        # Dependencies</code></pre>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

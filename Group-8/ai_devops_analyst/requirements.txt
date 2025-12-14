@@ -1,0 +1,17 @@
+streamlit
+langchain
+langchain-community
+langchain-core
+langgraph
+langchain-openai
+faiss-cpu
+python-dotenv
+requests
+python-pptx
+tiktoken
+jira
+slack_sdk
+pypdf
+sentence-transformers
+duckduckgo-search
+PyYAML

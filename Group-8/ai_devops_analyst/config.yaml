@@ -1,0 +1,10 @@
+
+jira:
+  url: "https://for27274.atlassian.net/"
+  user: "for27274@gmail.com"
+  api_token: "ATATT3xFfGF0OmFlOSHPnFDU53M8TO4fFmgTBuPQiqdVsv2Cq_VnZVNKTK_w_O80Eq7bzuJWBsIBUIsBRy_gC3d5S4gVsCHld9ym6Nf2zzGUPpbefbiQ0DrWmahAnKmxPnuZtuxMJWHkIaEY5eKODMdctnVQv38Goe-dMISogCc6yZAGmnCs29s=6CBFCF09"
+  project_key: "DEVOPS"
+  issue_type: "Task"
+
+slack:
+  webhook_url: "https://hooks.slack.com/services/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"
