@@ -1,4 +1,5 @@
 # 💰 AI Financial Coach
+presentation video: https://drive.google.com/file/d/1WuRdNzqcNoLtuwMrHrK6eyZRvJ3aOSxU/view?usp=sharing
 
 > **Your Personal AI-Powered Financial Advisor**
 > 
