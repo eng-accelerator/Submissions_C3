@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+streamlit
+playwright
+python-dotenv
+loguru
+pydantic
+pillow
+pytest
+pixelmatch
+openai
+langchain
+langchain-openai
+langgraph
+langchain-community

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stdout/Stderr Test UI</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        button { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .stdout-btn { background: #10b981; color: white; }
+        .stderr-btn { background: #ef4444; color: white; }
+        .mixed-btn { background: #f59e0b; color: white; }
+        .clear-btn { background: #6b7280; color: white; }
+        #log { background: #1f2937; color: #f9fafb; padding: 20px; border-radius: 12px; height: 400px; overflow-y: auto; font-family: 'Monaco', monospace; font-size: 13px; }
+        .log-entry { margin: 4px 0; padding: 6px 0; }
+        .stdout { color: #10b981; }
+        .stderr { color: #f87171; }
+        .timestamp { color: #9ca3af; font-size: 12px; }
+        @media (max-width: 600px) { .buttons { flex-direction: column; } button { width: 100%; } }
+    </style>
+</head>
+<body>
+    <h1>Stdout/Stderr Test UI</h1>
+    <div class="buttons">
+        <button class="stdout-btn" onclick="testStdout1()">Test Stdout 1</button>
+        <button class="stdout-btn" onclick="testStdout2()">Test Stdout 2</button>
+        <button class="stderr-btn" onclick="testStderr1()">Test Stderr 1</button>
+        <button class="stderr-btn" onclick="testStderr2()">Test Stderr 2</button>
+        <button class="mixed-btn" onclick="testMixed()">Test Mixed</button>
+        <button class="clear-btn" onclick="clearLog()">Clear Log</button>
+    </div>
+    <div id="log"></div>
+
+    <script>
+        function addLog(type, message) {
+            const log = document.getElementById('log');
+            const timestamp = new Date().toISOString().slice(11, 19);
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> <span>${message}</span>`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function testStdout1() {
+            console.log('Success: Button 1 worked ✓');
+            addLog('stdout', 'Success: Button 1 worked ✓');
+        }
+
+        function testStdout2() {
+            const timestamp = new Date().toLocaleTimeString();
+            console.log(`Info: Processing complete at ${timestamp}`);
+            addLog('stdout', `Info: Processing complete at ${timestamp}`);
+        }
+
+        function testStderr1() {
+            console.error('Error: Validation failed in test 1');
+            addLog('stderr', 'Error: Validation failed in test 1');
+        }
+
+        function testStderr2() {
+            console.error('Warning: Deprecated API used');
+            addLog('stderr', 'Warning: Deprecated API used');
+        }
+
+        function testMixed() {
+            console.log('Mixed: Starting test...');
+            console.error('Mixed: Network timeout error');
+            addLog('stdout', 'Mixed: Starting test...');
+            addLog('stderr', 'Mixed: Network timeout error');
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            console.clear();
+        }
+    </script>
+</body>
+</html>
