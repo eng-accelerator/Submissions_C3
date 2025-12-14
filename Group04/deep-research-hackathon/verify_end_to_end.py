@@ -1,6 +1,6 @@
-from deeptrace_researcher.core.graph import build_graph
-from deeptrace_researcher.core.schema import ResearchState
-from deeptrace_researcher.core.api_registry import APIRegistry
+from core.graph import build_graph
+from core.schema import ResearchState
+from core.api_registry import APIRegistry
 
 def test_demo_flow():
     print("--- Starting End-to-End Demo Verification ---")

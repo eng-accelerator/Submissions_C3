@@ -1,5 +1,5 @@
-from deeptrace_researcher.core.secure_store import SecureStore
-from deeptrace_researcher.core.api_registry import APIRegistry
+from core.secure_store import SecureStore
+from core.api_registry import APIRegistry
 import os
 import shutil
 
