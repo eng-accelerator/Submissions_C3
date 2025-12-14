@@ -1,0 +1,9 @@
+langgraph
+langchain
+langchain-community
+openai
+tiktoken
+faiss-cpu
+python-dotenv
+google-api-python-client  # For googleapiclient.discovery
+yt-dlp 
