@@ -1,0 +1,220 @@
+<!-- form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Submission Terminal</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --terminal-bg: #1e1e1e;
+            --terminal-text: #00ff00;
+            --terminal-error: #ff5555;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Terminal Styling for STDOUT/STDERR */
+        #terminal-output {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--terminal-bg);
+            color: var(--terminal-text);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            display: none; /* Hidden by default */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+        }
+
+        .log-line { margin: 5px 0; }
+        .stderr { color: var(--terminal-error); }
+        .stdout { color: var(--terminal-text); }
+        .dim { color: #888; }
+        
+        @keyframes typing {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-line {
+            animation: typing 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>User Registration</h2>
+        <form id="userForm">
+            <!-- Field 1 -->
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" placeholder="e.g. Jane Doe" required>
+            </div>
+
+            <!-- Field 2 -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+            </div>
+
+            <!-- Field 3 -->
+            <div class="form-group">
+                <label for="role">Job Role</label>
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select a role...</option>
+                    <option value="developer">Developer</option>
+                    <option value="designer">Designer</option>
+                    <option value="manager">Product Manager</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Field 4 -->
+            <div class="form-group">
+                <label for="department">Department Code</label>
+                <input type="text" id="department" name="department" placeholder="e.g. ENG-01" required>
+            </div>
+
+            <!-- Field 5 -->
+            <div class="form-group">
+                <label for="bio">Short Bio</label>
+                <textarea id="bio" name="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+            </div>
+
+            <button type="submit">Submit Data</button>
+        </form>
+    </div>
+
+    <!-- The simulated console output -->
+    <div id="terminal-output">
+        <div class="log-line dim">root@server:~$ ./process_submission.sh</div>
+    </div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            // 1. Prevent the actual page reload
+            event.preventDefault();
+
+            // 2. Collect Data
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            const terminal = document.getElementById('terminal-output');
+            
+            // 3. Reset and Show Terminal
+            terminal.style.display = 'block';
+            terminal.innerHTML = '<div class="log-line dim">root@server:~$ ./process_submission.sh -v</div>';
+
+            // 4. Helper function to print with delay
+            const printLog = (msg, type = 'stdout', delay = 0) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = `log-line ${type}`;
+                    div.innerText = msg;
+                    terminal.appendChild(div);
+                    // Auto scroll to bottom
+                    terminal.scrollTop = terminal.scrollHeight;
+                }, delay);
+            };
+
+            // 5. Simulation Sequence
+            const timestamp = new Date().toISOString();
+
+            // Print STDOUT (The Form Data)
+            printLog(`[STDOUT] Initialization started at ${timestamp}`, 'stdout', 200);
+            printLog(`[STDOUT] Parsing input fields...`, 'stdout', 600);
+            printLog(`[STDOUT] Name: "${data.fullname}"`, 'stdout', 900);
+            printLog(`[STDOUT] Email: "${data.email}"`, 'stdout', 1000);
+            printLog(`[STDOUT] Role: "${data.role.toUpperCase()}"`, 'stdout', 1100);
+            printLog(`[STDOUT] Payload serialization complete.`, 'stdout', 1500);
+
+            // Print STDERR (The Simulated Error)
+            printLog(`[STDERR] Warning: Deprecated API version detected in 'department' module.`, 'stderr', 2000);
+            printLog(`[STDERR] Error: Connection refused on port 8080. Data stored locally but not synced.`, 'stderr', 2400);
+            printLog(`[STDOUT] Process finished with exit code 1`, 'dim', 2600);
+        });
+    </script>
+
+</body>
+</html>
