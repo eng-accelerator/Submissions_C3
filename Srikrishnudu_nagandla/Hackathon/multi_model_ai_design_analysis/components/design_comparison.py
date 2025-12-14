@@ -176,9 +176,20 @@ Return ONLY valid JSON."""
         )
         
         if response.status_code == 200:
-            result = response.json()
-            content_str = result['choices'][0]['message']['content']
-            comparison_result = json.loads(content_str)
+            try:
+                result = response.json()
+            except ValueError:
+                return {"error": "Invalid JSON response from API", "raw_content": response.text}
+            choices = result.get("choices", [])
+            if not choices:
+                return {"error": "Empty response from model", "raw_response": result}
+            content_str = choices[0].get("message", {}).get("content", "")
+            if not content_str:
+                return {"error": "Empty content from model", "raw_response": result}
+            try:
+                comparison_result = json.loads(content_str)
+            except json.JSONDecodeError:
+                return {"error": "Invalid JSON in model content", "raw_content": content_str, "raw_response": result}
             
             # Add metadata
             comparison_result['num_designs_compared'] = num_designs
@@ -187,7 +198,11 @@ Return ONLY valid JSON."""
             
             return comparison_result
         else:
-            return {"error": f"API error: {response.status_code}", "details": response.text}
+            try:
+                details = response.json()
+            except ValueError:
+                details = response.text
+            return {"error": f"API error: {response.status_code}", "details": details}
     
     except Exception as e:
         return {"error": str(e)}

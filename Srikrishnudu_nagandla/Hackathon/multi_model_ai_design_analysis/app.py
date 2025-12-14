@@ -1,5 +1,5 @@
 """
-Main Streamlit Application - Enhanced Version
+Main Streamlit Application
 Component 6: Main Application Controller with Visual Features
 """
 
@@ -56,7 +56,7 @@ load_dotenv()
 
 # Page configuration
 st.set_page_config(
-    page_title="Design Analysis PoC - Enhanced",
+    page_title="Design Analysis PoC",
     page_icon="🎨",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -184,7 +184,104 @@ def render_enhanced_results_dashboard(final_report, image_base64, enabled_agents
 
     normalized_recs = [_normalize_rec(r) for r in raw_recommendations]
     enabled_agents = set(enabled_agents or ["visual", "ux", "market", "conversion", "brand"])
-    
+
+    # Quick summary up top: key metrics + annotated + before/after (compact)
+    st.subheader("Quick Summary")
+    qs_col1, qs_col2, qs_col3 = st.columns([1, 1, 1])
+    overall_score = final_report.get('overall_score', 0)
+    agent_scores = final_report.get('agent_scores', {})
+    with qs_col1:
+        st.metric("Overall", f"{overall_score}/100")
+        if "visual" in enabled_agents:
+            st.metric("Visual", f"{agent_scores.get('visual', 0)}/100")
+        if "ux" in enabled_agents:
+            st.metric("UX", f"{agent_scores.get('ux', 0)}/100")
+        if "market" in enabled_agents:
+            st.metric("Market", f"{agent_scores.get('market', 0)}/100")
+        if "conversion" in enabled_agents:
+            st.metric("Conversion", f"{agent_scores.get('conversion', 0)}/100")
+        if "brand" in enabled_agents:
+            st.metric("Brand", f"{agent_scores.get('brand', 0)}/100")
+    with qs_col2:
+        try:
+            ann_img = create_annotated_design(image_base64, normalized_recs)
+            st.image(ann_img, use_column_width=True, caption="Annotated preview", clamp=True)
+        except Exception:
+            st.info("Annotated preview unavailable.")
+
+    with qs_col3:
+        try:
+            before_after = generate_before_after_mockup(image_base64, normalized_recs)
+            st.image(before_after, use_column_width=True, caption="Before / After (simulated)", clamp=True)
+        except Exception:
+            st.info("Before/After preview unavailable.")
+
+    # Agent-specific highlights near top (collapsible)
+    with st.expander("# Agent-Specific Highlights", expanded=True):
+        detailed = final_report.get('detailed_findings', {})
+
+        def _render_agent_card(title, sections):
+            parts = [f"<div style='font-size:15px;font-weight:700;margin-bottom:6px;'>{title}</div>"]
+            for sect_title, recs in sections:
+                if recs:
+                    bullets = "".join([f"<li>{rec}</li>" for rec in recs[:2]])  # show top 2 to save space
+                    parts.append(
+                        f"<div style='margin-bottom:6px;'><span style='font-weight:600;'>{sect_title}:</span>"
+                        f"<ul style='margin:4px 0 0 18px;'>{bullets}</ul></div>"
+                    )
+            return (
+                "<div style='border:1px solid #eee;border-radius:8px;padding:10px 12px;"
+                "background:#fafafa;margin-bottom:10px;'>"
+                + "".join(parts)
+                + "</div>"
+            )
+
+        agent_cards = []
+        if "visual" in enabled_agents and detailed.get("visual"):
+            viz = detailed.get("visual", {})
+            agent_cards.append(("🎨 Visual", [
+                ("Color", viz.get("color_analysis", {}).get("recommendations", [])),
+                ("Layout", viz.get("layout_analysis", {}).get("recommendations", [])),
+                ("Typography", viz.get("typography", {}).get("recommendations", []))
+            ]))
+        if "ux" in enabled_agents and detailed.get("ux"):
+            ux = detailed.get("ux", {})
+            agent_cards.append(("👤 UX", [
+                ("Usability", ux.get("usability", {}).get("recommendations", [])),
+                ("Accessibility", ux.get("accessibility", {}).get("recommendations", [])),
+                ("Interactions", ux.get("interaction_patterns", {}).get("recommendations", []))
+            ]))
+        if "market" in enabled_agents and detailed.get("market"):
+            mk = detailed.get("market", {})
+            agent_cards.append(("📈 Market", [
+                ("Platform", mk.get("platform_optimization", {}).get("recommendations", [])),
+                ("Trends", mk.get("trend_analysis", {}).get("recommendations", [])),
+                ("Audience", mk.get("audience_fit", {}).get("recommendations", []))
+            ]))
+        if "conversion" in enabled_agents and detailed.get("conversion"):
+            cv = detailed.get("conversion", {})
+            agent_cards.append(("🎯 Conversion", [
+                ("CTA", cv.get("cta", {}).get("recommendations", [])),
+                ("Copy", cv.get("copy", {}).get("recommendations", [])),
+                ("Funnel", cv.get("funnel_fit", {}).get("recommendations", []))
+            ]))
+        if "brand" in enabled_agents and detailed.get("brand"):
+            br = detailed.get("brand", {})
+            agent_cards.append(("🏷️ Brand", [
+                ("Logo", br.get("logo_usage", {}).get("recommendations", [])),
+                ("Palette", br.get("palette_alignment", {}).get("recommendations", [])),
+                ("Typography", br.get("typography_alignment", {}).get("recommendations", [])),
+                ("Tone", br.get("tone_voice", {}).get("recommendations", []))
+            ]))
+
+        # Render cards in two columns to reduce vertical space
+        if agent_cards:
+            col_left, col_right = st.columns(2)
+            for idx, card in enumerate(agent_cards):
+                target_col = col_left if idx % 2 == 0 else col_right
+                with target_col:
+                    st.markdown(_render_agent_card(card[0], card[1]), unsafe_allow_html=True)
+
     # === TABS FOR DIFFERENT VIEWS ===
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "📊 Overview",
@@ -331,53 +428,6 @@ def render_enhanced_results_dashboard(final_report, image_base64, enabled_agents
                     st.write(f"**Priority:** {priority.upper()}")
                     st.write(f"**Source:** {source}")
                     st.write(f"**Recommendation:** {rec_text}")
-
-            # Agent-specific highlights
-            st.divider()
-            st.subheader("Agent-Specific Highlights")
-            detailed = final_report.get('detailed_findings', {})
-
-            def _list_recs(items, title):
-                if items:
-                    st.markdown(f"**{title}**")
-                    for rec in items[:3]:
-                        st.write(f"• {rec}")
-
-            if "visual" in enabled_agents and detailed.get("visual"):
-                with st.expander("🎨 Visual Agent"):
-                    viz = detailed.get("visual", {})
-                    _list_recs(viz.get("color_analysis", {}).get("recommendations", []), "Color")
-                    _list_recs(viz.get("layout_analysis", {}).get("recommendations", []), "Layout")
-                    _list_recs(viz.get("typography", {}).get("recommendations", []), "Typography")
-
-            if "ux" in enabled_agents and detailed.get("ux"):
-                with st.expander("👤 UX Agent"):
-                    ux = detailed.get("ux", {})
-                    _list_recs(ux.get("usability", {}).get("recommendations", []), "Usability")
-                    _list_recs(ux.get("accessibility", {}).get("recommendations", []), "Accessibility")
-                    _list_recs(ux.get("interaction_patterns", {}).get("recommendations", []), "Interactions")
-
-            if "market" in enabled_agents and detailed.get("market"):
-                with st.expander("📈 Market Agent"):
-                    mk = detailed.get("market", {})
-                    _list_recs(mk.get("platform_optimization", {}).get("recommendations", []), "Platform Optimization")
-                    _list_recs(mk.get("trend_analysis", {}).get("recommendations", []), "Trend Alignment")
-                    _list_recs(mk.get("audience_fit", {}).get("recommendations", []), "Audience Fit")
-
-            if "conversion" in enabled_agents and detailed.get("conversion"):
-                with st.expander("🎯 Conversion Agent"):
-                    cv = detailed.get("conversion", {})
-                    _list_recs(cv.get("cta", {}).get("recommendations", []), "CTA")
-                    _list_recs(cv.get("copy", {}).get("recommendations", []), "Copy")
-                    _list_recs(cv.get("funnel_fit", {}).get("recommendations", []), "Funnel Fit")
-
-            if "brand" in enabled_agents and detailed.get("brand"):
-                with st.expander("🏷️ Brand Agent"):
-                    br = detailed.get("brand", {})
-                    _list_recs(br.get("logo_usage", {}).get("recommendations", []), "Logo Usage")
-                    _list_recs(br.get("palette_alignment", {}).get("recommendations", []), "Palette")
-                    _list_recs(br.get("typography_alignment", {}).get("recommendations", []), "Typography")
-                    _list_recs(br.get("tone_voice", {}).get("recommendations", []), "Tone/Voice")
         else:
             st.info("No specific recommendations generated.")
     
@@ -565,8 +615,19 @@ def main():
     )
 
     # Title
-    st.title("🎨 Multimodal Design Analysis Suite - Enhanced")
+    st.title("🎨 Multimodal Design Analysis Suite")
     st.markdown("*Powered by OpenRouter API + LangGraph + FAISS RAG + CLIP + Visual Analytics*")
+    if "hide_upload_section" not in st.session_state:
+        st.session_state["hide_upload_section"] = False
+    expand_default = True
+    with st.expander("## 🎯 What This Enhanced Tool Does", expanded=expand_default):
+        st.markdown("""
+        **New Features**
+        - 📊 Enhanced visuals: gauges, radar, priority matrix, timelines, impact projections, category breakdowns.
+        - 🔄 Design comparison: side-by-side (2–5), ranking, key differences, synthesis, A/B plan, similarity matrix.
+        - 🎨 Visual feedback: annotated issues, before/after mockups, heatmaps, palette extraction, problem-area viz.
+        - 🔧 Controls: agent toggles, creative type, RAG `top_k`, and per-agent error surfacing.
+        """)
     st.markdown("---")
     
     # Quick badges on why it's ideal
@@ -681,28 +742,29 @@ def main():
     if analysis_mode == "Single Design" and len(uploaded_files) > 0 and uploaded_files[0] is not None:
         uploaded_file = uploaded_files[0]
         
-        # Display uploaded image
-        col1, col2 = st.columns([1, 1])
-        
-        with col1:
-            st.subheader("📸 Uploaded Design")
-            st.image(uploaded_file, use_column_width=True)
-        
-        with col2:
-            st.subheader("ℹ️ Image Information")
+        with st.expander("📤 Uploaded Design", expanded=not st.session_state.get("hide_upload_section", False)):
+            # Display uploaded image
+            col1, col2 = st.columns([1, 1])
             
-            try:
-                uploaded_file.seek(0)
-                processed_img = preprocess_image(uploaded_file)
-                metadata_info = extract_image_metadata(processed_img)
+            with col1:
+                st.subheader("📸 Uploaded Design")
+                st.image(uploaded_file, use_column_width=True)
+            
+            with col2:
+                st.subheader("ℹ️ Image Information")
                 
-                st.write(f"**Dimensions:** {metadata_info['width']} x {metadata_info['height']}px")
-                st.write(f"**Aspect Ratio:** {metadata_info['aspect_ratio']}:1")
-                st.write(f"**Format:** {metadata_info['format']}")
-                st.write(f"**Color Mode:** {metadata_info['mode']}")
-                st.write(f"**Target Platform:** {platform}")
-            except Exception as e:
-                st.warning(f"Could not extract metadata: {e}")
+                try:
+                    uploaded_file.seek(0)
+                    processed_img = preprocess_image(uploaded_file)
+                    metadata_info = extract_image_metadata(processed_img)
+                    
+                    st.write(f"**Dimensions:** {metadata_info['width']} x {metadata_info['height']}px")
+                    st.write(f"**Aspect Ratio:** {metadata_info['aspect_ratio']}:1")
+                    st.write(f"**Format:** {metadata_info['format']}")
+                    st.write(f"**Color Mode:** {metadata_info['mode']}")
+                    st.write(f"**Target Platform:** {platform}")
+                except Exception as e:
+                    st.warning(f"Could not extract metadata: {e}")
         
         st.divider()
         
@@ -751,6 +813,7 @@ def main():
                 
                 progress_placeholder.empty()
                 status_placeholder.success("✅ Analysis complete!")
+                st.session_state["hide_upload_section"] = True
                 
                 # Display enhanced results
                 final_report = final_state.get('final_report', {})
@@ -797,6 +860,7 @@ def main():
             # Compare button
             if st.button("🔄 Compare Designs", type="primary", use_container_width=True, key="compare_designs"):
                 try:
+                    st.session_state["hide_upload_section"] = True
                     with st.spinner("🔄 Processing designs..."):
                         designs_data = []
                         
@@ -993,35 +1057,8 @@ def main():
     else:
         # Welcome screen
         st.info("👆 Upload design(s) in the sidebar to begin analysis")
-		
-    st.markdown("### 🎯 What This Enhanced Tool Does")
-
-    st.markdown("""
-        **New Features:**
-        
-        1. **📊 Enhanced Visual Output**
-        - Interactive gauge charts for scores
-        - Radar charts for multi-dimensional analysis
-        - Priority matrices (Impact vs Effort)
-        - Implementation timelines
-        - Impact projection graphs
-        - Category breakdowns
-        
-        2. **🔄 Design Comparison**
-        - Side-by-side analysis of 2-5 designs
-        - Relative scoring and ranking
-        - Key differences identification
-        - Synthesis recommendations
-        - A/B test planning
-        - Similarity analysis
-        
-        3. **🎨 Visual Feedback**
-        - Annotated designs with issue highlights
-        - Before/After mockup generation
-        - Attention heatmaps
-        - Color palette extraction
-        - Problem area visualization
-        """)
+    
+    # Collapse overview once a file is uploaded (handled via expanded flag above)
 
 if __name__ == "__main__":
     main()
