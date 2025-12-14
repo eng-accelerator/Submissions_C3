@@ -163,13 +163,16 @@ DEEP_Research_V/
 
 ## License
 
-[Add your license here]
+MIT
+CREATIVE 4.0
 
 ## Contributing
 
-[Add contribution guidelines here]
+Ashmika Agarwal @ VoidPrakash RC Inv.
 
 ## Support
 
 For issues and questions, please open an issue on the repository.
+Mail ashmikaagarwal.ee@gmail.com
+
 
