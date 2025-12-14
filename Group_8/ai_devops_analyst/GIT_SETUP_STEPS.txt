@@ -1,0 +1,20 @@
+STEP 1: Open your terminal and navigate to the project folder:
+cd /Users/sasi/projects/DevOps/ai_devops_analyst
+
+STEP 2: Initialize the git repository:
+git init
+
+STEP 3: Add all files to staging:
+git add .
+
+STEP 4: Commit the files:
+git commit -m "Initial commit"
+
+STEP 5: Connect to your GitHub repository (Replace the URL with yours):
+git remote add origin <PASTE_YOUR_GITHUB_URL_HERE>
+
+STEP 6: Rename branch to main:
+git branch -M main
+
+STEP 7: Push the code:
+git push -u origin main
