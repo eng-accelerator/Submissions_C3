@@ -36,10 +36,42 @@ def analysis_node(state: ResearchState):
             
             response = llm.invoke([SystemMessage(content="You are a strict analyst."), HumanMessage(content=prompt)])
             
-            # Naive JSON parse
+            # Robust JSON parse
             import json
-            clean = response.content.replace("```json", "").replace("```", "").strip()
-            data = json.loads(clean)
+            import re
+            
+            content = response.content.strip()
+            # 1. Try simple clean
+            clean = content.replace("```json", "").replace("```", "").strip()
+            
+            data = None
+            try:
+                data = json.loads(clean)
+            except:
+                # 2. Try regex extraction (List OR Dict)
+                match = re.search(r'(\[.*\]|\{.*\})', content, re.DOTALL)
+                if match:
+                    try:
+                         # 3. Try removing control chars
+                         clean_chars = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', match.group(0))
+                         data = json.loads(clean_chars)
+                    except:
+                         pass
+            
+            if data is None:
+                 raise ValueError(f"No JSON found. Start of content: {content[:100]}")
+
+            # Normalize data (Ensure it is a list)
+            if isinstance(data, dict):
+                # Look for common keys
+                if "claims" in data: data = data["claims"]
+                elif "data" in data: data = data["data"]
+                else: data = [data] # Treat single dict as one item
+            
+            if not isinstance(data, list):
+                # Fallback
+                 data = []
+            
             
             real_claims = []
             for idx, item in enumerate(data):
