@@ -144,6 +144,7 @@ class AuthService:
             }
             
         finally:
+            db.close()
     @staticmethod
     def get_or_create_guest(guest_id: str) -> Dict[str, Any]:
         """
