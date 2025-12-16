@@ -18,3 +18,6 @@ git branch -M main
 
 STEP 7: Push the code:
 git push -u origin main
+
+
+Thanks
