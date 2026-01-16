@@ -30,9 +30,11 @@ JIRA_TOKEN = os.getenv("JIRA_TOKEN", "")
 JIRA_PROJECT = os.getenv("JIRA_PROJECT", "PROJ")
 VERIFY_SSL = os.getenv("VERIFY_SSL", "true").lower() == "true"
 
-# OpenAI Configuration (for LLM)
+# LLM Configuration (OpenAI or OpenRouter)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4-turbo-preview")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+LLM_MODEL = os.getenv("LLM_MODEL", "anthropic/claude-3.5-sonnet")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "")  # For OpenRouter or custom endpoints
 
 # Embedding Configuration
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
@@ -273,11 +275,25 @@ class JiraRAGAgent:
     def __init__(self):
         self.jira_client = JiraClient()
         self.vector_manager = VectorStoreManager()
-        self.llm = ChatOpenAI(
-            model=LLM_MODEL,
-            temperature=0,
-            openai_api_key=OPENAI_API_KEY
-        )
+        
+        # Initialize LLM (supports OpenAI, OpenRouter, or compatible APIs)
+        api_key = OPENROUTER_API_KEY or OPENAI_API_KEY
+        if not api_key:
+            raise ValueError("Missing API key. Set OPENROUTER_API_KEY or OPENAI_API_KEY")
+        
+        llm_kwargs = {
+            "model": LLM_MODEL,
+            "temperature": 0,
+            "openai_api_key": api_key
+        }
+        
+        # Add custom base URL if specified (for OpenRouter or other providers)
+        if LLM_BASE_URL:
+            llm_kwargs["openai_api_base"] = LLM_BASE_URL
+        elif OPENROUTER_API_KEY:
+            llm_kwargs["openai_api_base"] = "https://openrouter.ai/api/v1"
+        
+        self.llm = ChatOpenAI(**llm_kwargs)
         self.issue_key_pattern = re.compile(r'\b([A-Z][A-Z0-9]+-\d+)\b')
         
         # Custom prompt template
