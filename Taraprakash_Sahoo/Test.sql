@@ -15,3 +15,4 @@ CREATE INDEX idx_users_email ON users(email);
 -- Add new columns to users table
 ALTER TABLE users ADD COLUMN phone_number VARCHAR(20);
 ALTER TABLE users ADD COLUMN status VARCHAR(20) DEFAULT 'active';
+
