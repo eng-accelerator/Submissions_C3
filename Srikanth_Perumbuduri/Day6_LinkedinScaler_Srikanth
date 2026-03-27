@@ -1,0 +1,174 @@
+{
+  "name": "LinkedinScaler_Sri",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic-  {{ $json.body.topic }}\nWriting Style- {{ $json.body.writing_style }}\npost category- {{ $json.body.post_category }}\npost length- {{ $json.body.post_length }}\n",
+        "options": {
+          "systemMessage": "=Persona:\nYou are an expert LinkedIn Ghostwriter who has written 2,000+ viral posts for CEOs, founders, creators, and tech professionals. You deeply understand LinkedIn algorithms, storytelling, hooks, audience psychology, and content formats that drive millions of views. You specialise in creating scroll-stopping hooks, emotional storytelling, authority-building insights, and CTAs that spark engagement.\n\nTask:\nCreate a viral-style LinkedIn post based on:\nUse user messsage to get the details on Topic, style, length etc for the post.\n\nDon't use \"# and *\"\" for headers and in the post. Don't use em-dashes \"--\"\n\nYour job is to craft a LinkedIn post that maximizes reach, engagement, and shares through strong hooks, relatable narratives, crisp formatting, and powerful CTAs.\n\nContext:\nThe post should feel like it was written by a top LinkedIn creator. It must capture attention in the first 2–3 seconds, use pattern-interrupt techniques, create emotional resonance, and deliver real value. Add insights, examples, frameworks, or micro-stories depending on the post type. The goal is to trigger comments, saves, and reposts.\n\nFormat:\nFollow this exact structure:\n\nDon't use \"# and *\"\" for headers and in the post. Don't use em-dashes \"--\"\n\nHook (1–2 lines, punchy, curiosity-building, scroll-stopping)\n\nBody (story, insight, or breakdown depending on the post type)\n\nValue Section (actionable takeaways, lessons, or frameworks)\n\nCTA (ask a question that encourages comments, or invite people to share their thoughts)\n\nKeep paragraphs short (1–2 lines max).\n\nUse simple English, no jargon.\n\nAdd spacing for readability.\n\nDon't use # and * for headers. \n\nStricly Don't use em-dashes \n\nAdd few hashtags related to that topic maximum 4 or 5\n\nTone:\nConversational, bold, authoritative, and engaging—like top LinkedIn creators. No fluff. Every line should deliver value, emotion, or curiosity.\n\nOutput:\nA polished viral-style LinkedIn post ready to publish.\nDon't use em dashes. I want plain english post without em dashes "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        352,
+        0
+      ],
+      "id": "88e11176-4a76-411f-806f-538c27282f2c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        176
+      ],
+      "id": "0413d088-fe10-4fb7-a119-e0058eed3d9e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ot8W2CWcxL66sXLC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        704,
+        0
+      ],
+      "id": "141d8981-1ed7-42ad-9ea6-2fc71608314d",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "916d131f-6f67-4920-8da9-ee109f3b7d15",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        320
+      ],
+      "id": "48f51e95-6964-4548-9548-b3973995ec2d",
+      "name": "Webhook1",
+      "webhookId": "916d131f-6f67-4920-8da9-ee109f3b7d15"
+    },
+    {
+      "parameters": {
+        "person": "2ugcPEjrUT",
+        "text": "={{ $json.body.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        272,
+        320
+      ],
+      "id": "e2026e74-c735-44e3-a744-071d5828cbf2",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "xYRpAObahG5A72jn",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "3e62756c-a842-49da-ad46-28bfbbc43213",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "670996ef-303e-4c8b-b1ec-35d97846f53e",
+      "name": "Webhook",
+      "webhookId": "3e62756c-a842-49da-ad46-28bfbbc43213"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "50905112-f4ea-4339-a70e-14e88317019e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8035b373841e55791e46a6c5d1ae942ea87b725bdf323cca10b3ca3ef15a904b"
+  },
+  "id": "LwFMNRiNEZi67RAD",
+  "tags": []
+}
